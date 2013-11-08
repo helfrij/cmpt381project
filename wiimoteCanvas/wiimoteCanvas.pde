@@ -1,7 +1,9 @@
 
-float radius = 10.0;
+float radius = 5.0;
 int circleX, circleY;
-int nX, nY;
+
+WiiRemoteJ deviceFinder;
+WiiRemote remote;
 
 void setup() {
   
@@ -12,9 +14,9 @@ void setup() {
   circleX = width / 2;
   circleY = height / 2;
   
-  // set the initial values of the stored mouse position.
-  nX = circleX;
-  nY = circleY;
+  // create an instance of WiiRemote
+  deviceFinder = new WiiRemoteJ();
+  remote = deviceFinder.findRemote();
   
 }
 
@@ -23,10 +25,6 @@ void draw() {
   
   // the radius of the circle indicator changes with frameCount.
   radius = radius + sin( frameCount / 4 );
-  
-  // track circle indicator to new destination.
-  circleX += (nX - circleX);
-  circleY += (nY - circleY);
   
   // set the canvas background to grey.
   background( 100 );
@@ -41,7 +39,7 @@ void draw() {
 
 void mouseMoved() {
   
-  nX = mouseX;
-  nY = mouseY;
+  circleX = mouseX;
+  circleY = mouseY;
   
 }
