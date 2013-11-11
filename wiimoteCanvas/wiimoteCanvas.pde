@@ -7,6 +7,8 @@ WiiRemote remote;
 
 void setup() {
   
+  System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
+  
   // set canvas size.
   size( 300, 300 );
   
@@ -16,8 +18,21 @@ void setup() {
   
   // create an instance of WiiRemote
   deviceFinder = new WiiRemoteJ();
-  remote = deviceFinder.findRemote();
   
+  try
+  {
+    remote = deviceFinder.findRemote();
+    println("Looking for wiimote...");
+  } catch (InterruptedException e)
+  {
+    println("InterruptedException caught...");
+  } catch (IOException ie)
+  {
+    println("IOexception caught...");
+  }
+  
+  if(null != remote)
+    println("Wiimote successfully connected!");
 }
 
 
