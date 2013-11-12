@@ -2,8 +2,14 @@
 float radius = 5.0;
 int circleX, circleY;
 
+int lineWidth, fillColour;
+
 WiiRemoteJ deviceFinder;
 WiiRemote remote;
+
+ArrayList<Shape> shapes;
+
+ArrayList<Circle> shapePoints;
 
 void setup() {
   
@@ -16,6 +22,13 @@ void setup() {
   circleX = width / 2;
   circleY = height / 2;
   
+  fillColour = 0;
+  lineWidth = 1;
+  
+  noCursor();
+  
+  shapes = new ArrayList<Shape>();
+  /*
   // create an instance of WiiRemote
   deviceFinder = new WiiRemoteJ();
   
@@ -33,8 +46,11 @@ void setup() {
   
   if(null != remote)
     println("Wiimote successfully connected!");
+    
+    */
 }
 
+// View /////////////////////////////
 
 void draw() {
   
@@ -49,12 +65,38 @@ void draw() {
   stroke( 255 );
   ellipse( circleX, circleY, radius, radius );
   
+  for(Shape s : shapes) {
+    s.drawShape();
+  }  
 }
+
+// Controller ///////////////////////
 
 
 void mouseMoved() {
-  
   circleX = mouseX;
   circleY = mouseY;
-  
 }
+
+void mousePressed() {
+  shapePoints = new ArrayList<Circle>();
+}
+void mouseDragged() {
+  circleX = mouseX;
+  circleY = mouseY;
+ 
+  Circle c = new Circle(mouseX, mouseY, 0);
+  shapePoints.add(c);
+}
+
+void mouseReleased() {
+  AbstractShape a = new AbstractShape(shapePoints);
+  shapes.add(a);
+}
+
+void mouseClicked() {
+  Circle c = new Circle(mouseX, mouseY, lineWidth);
+  shapes.add(c);
+}
+
+
