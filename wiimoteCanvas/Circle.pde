@@ -19,4 +19,11 @@ public class Circle extends Shape {
  public int getY() {
    return y;
  }
+
+ public void setSelected() {
+ }
+ 
+ public boolean checkHit(int x, int y) {
+   return true;
+ }
 }

@@ -10,8 +10,15 @@ WiiRemoteJ deviceFinder;
 WiiRemote remote;
 
 ArrayList<Shape> shapes;
-
 ArrayList<Circle> shapePoints;
+
+color[] colours;
+
+Shape selected;
+
+boolean control;
+
+//////////////////////////////////////////////////////////////
 
 void setup() {
   
@@ -24,6 +31,8 @@ void setup() {
   // set canvas size.
   size( canvasW, canvasH );
   
+  control = false;
+  
   // set the initial position of the circle.
   circleX = width / 2;
   circleY = height / 2;
@@ -34,6 +43,15 @@ void setup() {
   noCursor();
   
   shapes = new ArrayList<Shape>();
+
+  colours = new color[10];
+  colours[0] = color(100, 0, 100);
+  colours[1] = color(200);
+  colours[2] = color(204, 153, 0);
+  colours[3] = color(200, 0, 0);
+  colours[4] = color(0, 200, 0);
+  colours[5] = color(0, 0, 200);
+  
   /*
   // create an instance of WiiRemote
   deviceFinder = new WiiRemoteJ();
@@ -70,15 +88,28 @@ void draw() {
   for(Shape s : shapes) {
     s.drawShape();
   }  
+  stroke(200);
   
   // Draw toolbar
   fill(0);
   strokeWeight(1);
   rect(canvasH/100, canvasH/100, toolbarW, toolbarH);
   
+  /*
+  fill(colours[fillColour]);
+  stroke(200);
+  rect(canvasH/50, canvasH/50, toolbarW*.75, toolbarH/20);
+  */
+  
+  strokeWeight(lineWidth);
+  stroke(colours[fillColour]);
+  line(canvasH/50, canvasH/10, toolbarW, canvasH/10);
+  
+  
   // draw a blue circle with white outline.
   fill( 0, 120, 180 );
   stroke( 255 );
+  strokeWeight(1);
   ellipse( circleX, circleY, radius, radius );
   
 }
@@ -92,23 +123,71 @@ void mouseMoved() {
 }
 
 void mousePressed() {
-  shapePoints = new ArrayList<Circle>();
+  if(!control) {
+    shapePoints = new ArrayList<Circle>();
+  }
 }
 void mouseDragged() {
-  circleX = mouseX;
-  circleY = mouseY;
+  if(!control) {
+    circleX = mouseX;
+    circleY = mouseY;
  
-  Circle c = new Circle(mouseX, mouseY, 0);
-  shapePoints.add(c);
+    Circle c = new Circle(mouseX, mouseY, 0);
+    shapePoints.add(c);
+  }
 }
 
 void mouseReleased() {
-  AbstractShape a = new AbstractShape(shapePoints);
-  shapes.add(a);
+  if(!control) {
+    AbstractShape a = new AbstractShape(shapePoints, lineWidth, colours[fillColour]);
+    shapes.add(a);
+  }
 }
 
 void mouseClicked() {
-  Circle c = new Circle(mouseX, mouseY, lineWidth);
-  shapes.add(c);
+  if(control) {
+    if(null != selected) {
+      selected.setSelected();
+    }
+    selected = null;
+    for(Shape s : shapes) {
+      if(s.checkHit(mouseX, mouseY)) {
+        s.setSelected();
+        selected = s;
+      }
+    }
+  }
+  else if(!control){
+    Circle c = new Circle(mouseX, mouseY, lineWidth);
+    shapes.add(c);
+  }
+}
+
+void keyPressed() {
+  if(CODED == key) {
+    if(SHIFT == keyCode) {
+      control = !control;
+    }
+  }
+  else {
+    if(('a' == key) && (lineWidth<=20)) {
+      lineWidth++;
+    }
+    else if(('s' == key) && (lineWidth>0)) {
+      lineWidth--;
+    }
+    else if(('c' == key) && (fillColour<5)) {
+      fillColour++;
+    }
+    else if(('c' == key) && (5==fillColour)) {
+      fillColour = 0;
+    }
+    else if(('v' == key) && (fillColour>0)) {
+      fillColour--;
+    }
+    else if(('v' == key) && (0 == fillColour)) {
+      fillColour = 5;
+    }
+  }
 }
 
