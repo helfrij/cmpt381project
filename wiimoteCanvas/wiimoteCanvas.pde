@@ -7,7 +7,7 @@ WiiRemote remote;
 
 void setup() {
   
-  System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
+  //System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
   
   // set canvas size.
   size( 300, 300 );
