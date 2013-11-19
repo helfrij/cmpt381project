@@ -18,6 +18,8 @@ Shape selected;
 
 boolean control;
 
+int xMouse, yMouse;
+
 //////////////////////////////////////////////////////////////
 
 void setup() {
@@ -27,23 +29,30 @@ void setup() {
   toolbarH = canvasH - canvasH/50;
   toolbarW = canvasW/6;
   
+  //set property for bluetooth communication
   System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
+  
   // set canvas size.
   size( canvasW, canvasH );
   
+  //canvas set to drawing mode by default
   control = false;
   
   // set the initial position of the circle.
   circleX = width / 2;
   circleY = height / 2;
   
+  //set initial fill colour and line width
   fillColour = 0;
   lineWidth = 1;
   
+  //do not display default cursor
   noCursor();
   
+  //create empty list of shapes
   shapes = new ArrayList<Shape>();
 
+  // create colour palette
   colours = new color[10];
   colours[0] = color(100, 0, 100);
   colours[1] = color(200);
@@ -52,7 +61,7 @@ void setup() {
   colours[4] = color(0, 200, 0);
   colours[5] = color(0, 0, 200);
   
-  /*
+  
   // create an instance of WiiRemote
   deviceFinder = new WiiRemoteJ();
   
@@ -70,8 +79,20 @@ void setup() {
   
   if(null != remote)
     println("Wiimote successfully connected!");
-    
-    */
+  try {
+    remote.vibrateFor(1000); 
+  } catch(IOException e) {
+  }
+  
+  
+  try {
+    remote.setAccelerometerEnabled(true);
+  } catch(IOException e) {
+    println("IOException caught enabling accelerometer");
+  }
+  
+  WiimoteListener wiiList = new WiimoteListener();
+  remote.addWiiRemoteListener(wiiList); 
 }
 
 // View /////////////////////////////
@@ -88,18 +109,13 @@ void draw() {
   for(Shape s : shapes) {
     s.drawShape();
   }  
+  //set stroke colour to white
   stroke(200);
   
   // Draw toolbar
   fill(0);
   strokeWeight(1);
   rect(canvasH/100, canvasH/100, toolbarW, toolbarH);
-  
-  /*
-  fill(colours[fillColour]);
-  stroke(200);
-  rect(canvasH/50, canvasH/50, toolbarW*.75, toolbarH/20);
-  */
   
   strokeWeight(lineWidth);
   stroke(colours[fillColour]);
@@ -118,6 +134,8 @@ void draw() {
 
 
 void mouseMoved() {
+  xMouse = mouseX;
+  yMouse = mouseY;
   circleX = mouseX;
   circleY = mouseY;
 }
@@ -128,14 +146,17 @@ void mousePressed() {
   }
 }
 void mouseDragged() {
-  if(!control) {
+    xMouse = mouseX;
+    yMouse = mouseY;
     circleX = mouseX;
     circleY = mouseY;
- 
-    Circle c = new Circle(mouseX, mouseY, 0);
-    shapePoints.add(c);
+    
+    if(!control) {
+      Circle c = new Circle(mouseX, mouseY, 0);
+      shapePoints.add(c);
+    }
   }
-}
+
 
 void mouseReleased() {
   if(!control) {
