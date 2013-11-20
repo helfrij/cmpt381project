@@ -3,7 +3,6 @@ float radius = 5.0;
 int circleX, circleY;
 
 int lineWidth, fillColour;
-float toolbarH, toolbarW;
 int canvasH, canvasW;
 
 WiiRemoteJ deviceFinder;
@@ -11,6 +10,8 @@ WiiRemote remote;
 
 ArrayList<Shape> shapes;
 ArrayList<Circle> shapePoints;
+
+ToolBar toolbar;
 
 color[] colours;
 
@@ -26,8 +27,6 @@ void setup() {
   
   canvasW = 1000;
   canvasH = 700;
-  toolbarH = canvasH - canvasH/50;
-  toolbarW = canvasW/6;
   
   //set property for bluetooth communication
   System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
@@ -44,7 +43,7 @@ void setup() {
   
   //set initial fill colour and line width
   fillColour = 0;
-  lineWidth = 1;
+//  lineWidth = 1;
   
   //do not display default cursor
   noCursor();
@@ -102,27 +101,22 @@ void draw() {
   // the radius of the circle indicator changes with frameCount.
   radius = radius + sin( frameCount / 4 );
   
-  // set the canvas background to grey.
-  background( 100 );
+  // set the canvas background to white.
+  background( 255 );
   
   // Draw Shapes
   for(Shape s : shapes) {
     s.drawShape();
   }  
+  
   //set stroke colour to white
   stroke(200);
   
-  // Draw toolbar
-  fill(0);
-  strokeWeight(1);
-  rect(canvasH/100, canvasH/100, toolbarW, toolbarH);
+  // Draw toolbar. Maybe make the toolbar moveable?
+  toolbar = new ToolBar(canvasW/100, canvasH/100, canvasH - canvasH/50, canvasW/6);
   
-  strokeWeight(lineWidth);
-  stroke(colours[fillColour]);
-  line(canvasH/50, canvasH/10, toolbarW, canvasH/10);
-  
-  
-  // draw a blue circle with white outline.
+  // draw a blue circle with white outline for the indicator.
+  // eventually, I'd like the indicator color to match the background color of the selected tool icon.
   fill( 0, 120, 180 );
   stroke( 255 );
   strokeWeight(1);
