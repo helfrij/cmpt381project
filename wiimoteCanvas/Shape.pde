@@ -1,6 +1,7 @@
 abstract class Shape {
 
   int x, y;
+  int rotation;
   
   
   public abstract void drawShape();

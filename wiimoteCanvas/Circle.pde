@@ -20,6 +20,14 @@ public class Circle extends Shape {
    return y;
  }
 
+public void setX(int newX) {
+  x = newX;
+}
+
+public void setY(int newY) {
+  y = newY;
+}
+
  public void setSelected() {
  }
  
