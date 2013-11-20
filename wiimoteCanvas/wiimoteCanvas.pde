@@ -60,6 +60,7 @@ void setup() {
   colours[4] = color(0, 200, 0);
   colours[5] = color(0, 0, 200);
   
+  toolbar = new ToolBar(canvasW/100, canvasH/100, canvasH - canvasH/50, canvasW/6);
   
   // create an instance of WiiRemote
   deviceFinder = new WiiRemoteJ();
@@ -113,7 +114,7 @@ void draw() {
   stroke(200);
   
   // Draw toolbar. Maybe make the toolbar moveable?
-  toolbar = new ToolBar(canvasW/100, canvasH/100, canvasH - canvasH/50, canvasW/6);
+  toolbar.drawToolBar();
   
   // draw a blue circle with white outline for the indicator.
   // eventually, I'd like the indicator color to match the background color of the selected tool icon.
