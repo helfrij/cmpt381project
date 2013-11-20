@@ -43,7 +43,7 @@ void setup() {
   
   //set initial fill colour and line width
   fillColour = 0;
-//  lineWidth = 1;
+  lineWidth = 1;
   
   //do not display default cursor
   noCursor();
@@ -60,7 +60,7 @@ void setup() {
   colours[4] = color(0, 200, 0);
   colours[5] = color(0, 0, 200);
   
-  toolbar = new ToolBar(canvasW/100, canvasH/100, canvasH - canvasH/50, canvasW/6);
+  toolbar = new ToolBar(canvasW/100, canvasH/100, canvasW/6, canvasH - canvasH/50);
   
   // create an instance of WiiRemote
   deviceFinder = new WiiRemoteJ();
@@ -154,6 +154,8 @@ void mouseDragged() {
 
 
 void mouseReleased() {
+  if(mouseY<canvasH/100) {
+  }
   if(!control) {
     AbstractShape a = new AbstractShape(shapePoints, lineWidth, colours[fillColour]);
     shapes.add(a);
@@ -161,6 +163,9 @@ void mouseReleased() {
 }
 
 void mouseClicked() {
+  if(mouseY<toolbar.getHeight()) {
+    toolbar.wasClicked(mouseX, mouseY);
+  }
   if(control) {
     if(null != selected) {
       selected.setSelected();

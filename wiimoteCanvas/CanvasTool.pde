@@ -15,6 +15,10 @@ abstract class CanvasTool {
   public abstract boolean wasClicked(int clickX, int clickY);
   public abstract void drawIcon();
   
+  public void setSelected() {
+    isSelected = !isSelected;
+  }
+  
   public void selectTool() {
     isSelected = true;
   }

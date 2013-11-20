@@ -19,6 +19,20 @@ public class ToolBar {
     
   }
   
+  public int getHeight() {
+     return toolbarH; 
+  }
+ 
+  
+  
+  public void wasClicked(int x, int y) {
+    for(CanvasTool c : tools) {
+      if(c.wasClicked(x, y)) {
+        c.setSelected();
+      }
+    }
+  }
+  
   public void drawToolBar() {
     
     fill(0);
