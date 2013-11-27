@@ -18,10 +18,6 @@ void setup() {
   canvasW = 1000;
   canvasH = 700;
   
-  // set the coordinates of the top left corner of the toolbar.
-  toolbarX = canvasW/100;
-  toolbarY = canvasH/100;
-  
   // set canvas size.
   size(canvasW, canvasH);
   
