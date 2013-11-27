@@ -1,48 +1,25 @@
-public class LineTool extends CanvasTool {
+public class LineTool extends AbstractTool {
   
-  int iconX, iconY;
-  int lineWidth;
-  
-  public LineTool(int x, int y) {
-    iconX = x;
-    iconY = y;
-    bgColor = color(0, 120, 180);
-    lineWidth = 1;
+  public LineTool() {
+    iconColor = color(129, 98, 220);
   }
   
-  public color getIconColor() {
-    // if the tool is selected, the mouse/wiimote indicator color should match the tool color.
-   return bgColor; 
-  }
   
-  public boolean wasClicked(int clickX, int clickY) {
+  public void drawIcon(float xPos, float yPos, float size) {
+    iconX = xPos;
+    iconY = yPos;
+    iconSize = size;
     
-    if ((clickX >= iconX) && (clickY >= iconY) && (clickX <= iconX + iconW) && (clickY <= iconY + iconH)) {
-      return true;
-    }
-    
-    return false;
-  }
-  
-  public void drawIcon() {
-    
-    // if this tool is selected, make the icon outline thicker (and pulsing maybe?).
-    if (isSelected) {
-      strokeWeight(selectedWeight);
-    } else {
-      strokeWeight(normalWeight);
-    }
-    
-    // draw the icon square.
+    fill(iconColor, opacity);
     stroke(255);
-    fill(bgColor); // set icon background color to blue.
-    rect(iconX, iconY, iconW, iconH, iconCorner);
-    
-    // draw the line on top.
-    strokeWeight(lineWidth);
-//    stroke(colours[fillColour]); // commented out for simplicity right now, but should reflect the line color!
-    stroke(0);
-    line(iconX, iconY, iconX + iconW, iconX + iconH);
+    strokeWeight(weight);
+    rect(iconX, iconY, iconSize, iconSize, 7);
+  }
+  
+  
+  public LineShape createCanvasObject() {
+      LineShape newLine = new LineShape();
+      return newLine;
   }
   
 }

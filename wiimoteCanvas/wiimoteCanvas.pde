@@ -1,214 +1,129 @@
 
-float radius = 5.0;
-int circleX, circleY;
+float cursorRadius = 5.0;
+int cursorX, cursorY;
+color cursorColor;
 
-int lineWidth, fillColour;
 int canvasH, canvasW;
 
-WiiRemoteJ deviceFinder;
-WiiRemote remote;
-
-ArrayList<Shape> shapes;
-ArrayList<Circle> shapePoints;
+int toolbarX, toolbarY;
 
 ToolBar toolbar;
-
-color[] colours;
-
-Shape selected;
-
-boolean control;
-
-int xMouse, yMouse;
+CanvasModel model;
 
 //////////////////////////////////////////////////////////////
 
 void setup() {
   
+  // set canvas dimensions.
   canvasW = 1000;
   canvasH = 700;
   
-  //set property for bluetooth communication
-  System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
+  // set the coordinates of the top left corner of the toolbar.
+  toolbarX = canvasW/100;
+  toolbarY = canvasH/100;
   
   // set canvas size.
-  size( canvasW, canvasH );
+  size(canvasW, canvasH);
   
-  //canvas set to drawing mode by default
-  control = false;
+  // set the initial position of the cursor.
+  cursorX = width / 2;
+  cursorY = height / 2;
   
-  // set the initial position of the circle.
-  circleX = width / 2;
-  circleY = height / 2;
-  
-  //set initial fill colour and line width
-  fillColour = 0;
-  lineWidth = 1;
-  
-  //do not display default cursor
+  // do not display default cursor
   noCursor();
   
-  //create empty list of shapes
-  shapes = new ArrayList<Shape>();
+  // set up the model, stores the shapes drawn on the canvas.
+  model = new CanvasModel();
 
-  // create colour palette
-  colours = new color[10];
-  colours[0] = color(100, 0, 100);
-  colours[1] = color(200);
-  colours[2] = color(204, 153, 0);
-  colours[3] = color(200, 0, 0);
-  colours[4] = color(0, 200, 0);
-  colours[5] = color(0, 0, 200);
-  
-  toolbar = new ToolBar(canvasW/100, canvasH/100, canvasW/6, canvasH - canvasH/50);
-  
-  // create an instance of WiiRemote
-  deviceFinder = new WiiRemoteJ();
-  
-  try
-  {
-    remote = deviceFinder.findRemote();
-    println("Looking for wiimote...");
-  } catch (InterruptedException e)
-  {
-    println("InterruptedException caught...");
-  } catch (IOException ie)
-  {
-    println("IOexception caught...");
-  }
-  
-  if(null != remote)
-    println("Wiimote successfully connected!");
-  try {
-    remote.vibrateFor(1000); 
-  } catch(IOException e) {
-  }
-  
-  
-  try {
-    remote.setAccelerometerEnabled(true);
-  } catch(IOException e) {
-    println("IOException caught enabling accelerometer");
-  }
-  
-  WiimoteListener wiiList = new WiimoteListener();
-  remote.addWiiRemoteListener(wiiList); 
+  // set up the toolbar, stores the available tools.
+  toolbar = new ToolBar(canvasW, canvasH);
 }
+
+
 
 // View /////////////////////////////
 
 void draw() {
   
   // the radius of the circle indicator changes with frameCount.
-  radius = radius + sin( frameCount / 4 );
+  cursorRadius = cursorRadius + sin( frameCount / 4 );
   
-  // set the canvas background to white.
-  background( 255 );
+  // set the canvas background to grey.
+  background(209);
   
-  // Draw Shapes
-  for(Shape s : shapes) {
-    s.drawShape();
-  }  
+  // draw shapes.
+  model.drawShapes();
   
-  //set stroke colour to white
-  stroke(200);
-  
-  // Draw toolbar. Maybe make the toolbar moveable?
+  // draw toolbar.
   toolbar.drawToolBar();
+  cursorColor = toolbar.getCursorColor();
   
-  // draw a blue circle with white outline for the indicator.
-  // eventually, I'd like the indicator color to match the background color of the selected tool icon.
-  fill( 0, 120, 180 );
-  stroke( 255 );
+  // draw cursor.
+  fill(cursorColor);
+  stroke(255);
   strokeWeight(1);
-  ellipse( circleX, circleY, radius, radius );
+  ellipse(cursorX, cursorY, cursorRadius, cursorRadius);
   
 }
+
+
+
 
 // Controller ///////////////////////
 
 
 void mouseMoved() {
-  xMouse = mouseX;
-  yMouse = mouseY;
-  circleX = mouseX;
-  circleY = mouseY;
+  cursorX = mouseX;
+  cursorY = mouseY;
+  
+  toolbar.hoverCheck(cursorX, cursorY);
 }
 
+
+void mouseClicked() {
+  int clickX = mouseX;
+  int clickY = mouseY;
+  
+  toolbar.clickCheck(clickX, clickY);
+  
+}
+
+
+
 void mousePressed() {
-  if(!control) {
-    shapePoints = new ArrayList<Circle>();
+  int pressX = mouseX;
+  int pressY = mouseY;
+  
+  toolbar.pressCheck(pressX, pressY);
+  
+  // if the press landed on the canvas (not on any toolbar items) and the selected tool is valid, begin drawing a new shape.
+  if (toolbar.getDrawingState(pressX, pressY) && toolbar.selectedToolExists()) {
+    AbstractShape newShape = toolbar.getSelectedTool().createCanvasObject();
+    model.startNewShape(newShape);
   }
 }
-void mouseDragged() {
-    xMouse = mouseX;
-    yMouse = mouseY;
-    circleX = mouseX;
-    circleY = mouseY;
-    
-    if(!control) {
-      Circle c = new Circle(mouseX, mouseY, 0);
-      shapePoints.add(c);
-    }
-  }
+
 
 
 void mouseReleased() {
-  if(mouseY<canvasH/100) {
-  }
-  if(!control) {
-    AbstractShape a = new AbstractShape(shapePoints, lineWidth, colours[fillColour]);
-    shapes.add(a);
-  }
+  float lastX = mouseX;
+  float lastY = mouseY;
+  
+  toolbar.released(lastX, lastY); 
+  model.finishNewShape(lastX, lastY);
 }
 
-void mouseClicked() {
-  if(mouseY<toolbar.getHeight()) {
-    toolbar.wasClicked(mouseX, mouseY);
-  }
-  if(control) {
-    if(null != selected) {
-      selected.setSelected();
-    }
-    selected = null;
-    for(Shape s : shapes) {
-      if(s.checkHit(mouseX, mouseY)) {
-        s.setSelected();
-        selected = s;
-      }
-    }
-  }
-  else if(!control){
-    Circle c = new Circle(mouseX, mouseY, lineWidth);
-    shapes.add(c);
-  }
-}
 
-void keyPressed() {
-  if(CODED == key) {
-    if(SHIFT == keyCode) {
-      control = !control;
-    }
+
+void mouseDragged() {
+  cursorX = mouseX;
+  cursorY = mouseY;
+  
+  toolbar.dragCheck(cursorX, cursorY);
+  
+  if (model.getDrawingState()) {
+    model.addToShape(cursorX, cursorY);
   }
-  else {
-    if(('a' == key) && (lineWidth<=20)) {
-      lineWidth++;
-    }
-    else if(('s' == key) && (lineWidth>0)) {
-      lineWidth--;
-    }
-    else if(('c' == key) && (fillColour<5)) {
-      fillColour++;
-    }
-    else if(('c' == key) && (5==fillColour)) {
-      fillColour = 0;
-    }
-    else if(('v' == key) && (fillColour>0)) {
-      fillColour--;
-    }
-    else if(('v' == key) && (0 == fillColour)) {
-      fillColour = 5;
-    }
-  }
+  
 }
 
