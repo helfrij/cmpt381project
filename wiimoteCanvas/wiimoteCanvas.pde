@@ -117,7 +117,7 @@ void mouseDragged() {
   
   toolbar.dragCheck(cursorX, cursorY);
   
-  if (model.getDrawingState()) {
+  if (toolbar.getDrawingState(cursorX, cursorY) && model.getDrawingState()) {
     model.addToShape(cursorX, cursorY);
   }
   
