@@ -4,7 +4,6 @@ public class LineShape extends AbstractShape {
     
   public LineShape() {
     points = new ArrayList<Point>();
-    
     lineWidth = 2;
     lineColor = color(0, 0, 0);
     isSelected = false;

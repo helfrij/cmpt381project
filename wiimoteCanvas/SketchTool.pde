@@ -18,6 +18,7 @@ public class SketchTool extends AbstractTool {
   
   
   public AbstractShape createCanvasShape() {
-    return null;
+    SketchShape newShape = new SketchShape();
+    return newShape;
   }  
 }
