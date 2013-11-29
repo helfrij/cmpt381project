@@ -17,7 +17,7 @@ public class LineTool extends AbstractTool {
   }
   
   
-  public LineShape createCanvasObject() {
+  public LineShape createCanvasShape() {
       LineShape newLine = new LineShape();
       return newLine;
   }

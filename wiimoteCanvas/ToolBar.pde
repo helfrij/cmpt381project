@@ -1,16 +1,18 @@
 public class ToolBar {
-  int canvasH, canvasW;
   
-  float xOffset = 0.0;
-  float yOffset = 0.0;
+  private int canvasH, canvasW;
   
-  int selectedWeight, deselectedWeight;
+  private float xOffset = 0.0;
+  private float yOffset = 0.0;
   
-  boolean isSelected;
-  boolean isMoving;
-  boolean isVertical;
+  private int selectedWeight, deselectedWeight;
   
-  ToolBarModel toolsModel;
+  private boolean isSelected;
+  private boolean isMoving;
+  private boolean isVertical;
+  private boolean isShown;
+  
+  private ToolBarModel toolsModel;
   
   public ToolBar(int canvasWidth, int canvasHeight) {
     canvasW = canvasWidth;
@@ -22,8 +24,19 @@ public class ToolBar {
     isSelected = false;
     isMoving = false;
     isVertical = true;
+    isShown = true;
     
     toolsModel = new ToolBarModel(canvasWidth, canvasHeight);
+  }
+  
+  
+  public void showToolBar() {
+    isShown = true;
+  }
+  
+  
+  public void hideToolbar() {
+    isShown = false;
   }
   
   
@@ -39,11 +52,6 @@ public class ToolBar {
   
   public AbstractTool getSelectedTool() {
     return toolsModel.getSelectedTool(); 
-  }
-  
-  
-  public boolean getDrawingState(float x, float y) {
-    return toolsModel.getDrawingState(x, y);
   }
   
   
@@ -119,20 +127,29 @@ public class ToolBar {
   }
   
   
+  public boolean canvasHit(float pressX, float pressY) {
+    return toolsModel.canvasHit(pressX, pressY); 
+  }
+  
+  
   public color getCursorColor() {
     return toolsModel.getCursorColor(); 
   }
   
   
   public void drawToolBar() {
-    fill(toolsModel.getToolbarColor());
-    stroke(255);
-    strokeWeight(toolsModel.getToolbarWeight());
     
-    rect(toolsModel.getToolbarX(), toolsModel.getToolbarY(), toolsModel.getToolbarW(), toolsModel.getToolbarH(), 7);
+    if (isShown) {
+      fill(toolsModel.getToolbarColor());
+      stroke(255);
+      strokeWeight(toolsModel.getToolbarWeight());
     
-    // draw the tool icons in the toolbar.
-    toolsModel.drawIcons();
+      rect(toolsModel.getToolbarX(), toolsModel.getToolbarY(), toolsModel.getToolbarW(), toolsModel.getToolbarH(), 7);
+    
+      // draw the tool icons in the toolbar.
+      toolsModel.drawIcons();
+    }
+    
   }
   
 }

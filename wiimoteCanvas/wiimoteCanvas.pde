@@ -1,18 +1,21 @@
 
-float cursorRadius = 5.0;
-int cursorX, cursorY;
-color cursorColor;
+private float cursorRadius;
+private int cursorX, cursorY;
+private color cursorColor;
 
-int canvasH, canvasW;
+private int canvasH, canvasW;
 
-int toolbarX, toolbarY;
+private WiimoteListener deviceListener;
+private ToolBar toolbar;
+private CanvasModel model;
 
-ToolBar toolbar;
-CanvasModel model;
+private AbstractShape drawingShape;
 
 //////////////////////////////////////////////////////////////
 
 void setup() {
+  cursorRadius = 5.0;
+  drawingShape = null;
   
   // set canvas dimensions.
   canvasW = 1000;
@@ -27,6 +30,9 @@ void setup() {
   
   // do not display default cursor
   noCursor();
+  
+  // set up wiimote listener
+  deviceListener = new WiimoteListener();
   
   // set up the model, stores the shapes drawn on the canvas.
   model = new CanvasModel();
@@ -45,10 +51,14 @@ void draw() {
   cursorRadius = cursorRadius + sin( frameCount / 4 );
   
   // set the canvas background to grey.
-  background(209);
+  background(220);
   
   // draw shapes.
   model.drawShapes();
+  
+  if (drawingShape != null) {
+    drawingShape.drawShape(); 
+  }
   
   // draw toolbar.
   toolbar.drawToolBar();
@@ -72,41 +82,38 @@ void mouseMoved() {
   cursorX = mouseX;
   cursorY = mouseY;
   
-  toolbar.hoverCheck(cursorX, cursorY);
+  if (!mousePressed) {
+    toolbar.hoverCheck(cursorX, cursorY);
+  }
 }
 
 
 void mouseClicked() {
-  int clickX = mouseX;
-  int clickY = mouseY;
-  
-  toolbar.clickCheck(clickX, clickY);
-  
+  toolbar.clickCheck(mouseX, mouseY);
 }
 
 
 
 void mousePressed() {
-  int pressX = mouseX;
-  int pressY = mouseY;
-  
-  toolbar.pressCheck(pressX, pressY);
+  toolbar.pressCheck(mouseX, mouseY);
   
   // if the press landed on the canvas (not on any toolbar items) and the selected tool is valid, begin drawing a new shape.
-  if (toolbar.getDrawingState(pressX, pressY) && toolbar.selectedToolExists()) {
-    AbstractShape newShape = toolbar.getSelectedTool().createCanvasObject();
-    model.startNewShape(newShape);
+  if (toolbar.canvasHit(mouseX, mouseY) && toolbar.selectedToolExists()) {
+    AbstractShape newShape = toolbar.getSelectedTool().createCanvasShape();
+    drawingShape = newShape;
   }
 }
 
 
 
 void mouseReleased() {
-  float lastX = mouseX;
-  float lastY = mouseY;
+  toolbar.released(mouseX, mouseY); 
   
-  toolbar.released(lastX, lastY); 
-  model.finishNewShape(lastX, lastY);
+  if (drawingShape != null) {
+    model.addShape(drawingShape); 
+  }
+  
+  drawingShape = null;
 }
 
 
@@ -117,8 +124,8 @@ void mouseDragged() {
   
   toolbar.dragCheck(cursorX, cursorY);
   
-  if (toolbar.getDrawingState(cursorX, cursorY) && model.getDrawingState()) {
-    model.addToShape(cursorX, cursorY);
+  if (drawingShape != null) {
+    drawingShape.addPoint(cursorX, cursorY); 
   }
   
 }

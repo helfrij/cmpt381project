@@ -1,28 +1,27 @@
 public class ToolBarModel {
-  float canvasHeight, canvasWidth;
+  private float canvasHeight, canvasWidth;
   
-  float toolbarX, toolbarY;
-  float toolbarW, toolbarH;
-  boolean toolbarSelected;
-  boolean toolbarMoving;
-  float xOffset, yOffset;
-  color toolbarColor;
+  private float toolbarX, toolbarY;
+  private float toolbarW, toolbarH;
+  private boolean toolbarSelected;
+  private boolean toolbarMoving;
+  private float xOffset, yOffset;
+  private color toolbarColor;
   
-  int selectedWeight = 4;
-  int normalWeight = 2;
-  int hoverWeight = 4;
-  int toolbarWeight;
+  private int selectedWeight = 4;
+  private int normalWeight = 2;
+  private int hoverWeight = 4;
+  private int toolbarWeight;
   
-  float iconX, iconY, iconSize;
-  float iconCushion;
+  private float iconX, iconY, iconSize;
+  private float iconCushion;
   
-  int toolCount = 0;
+  private int toolCount = 0;
   
-  ArrayList<AbstractTool> tools;
-  AbstractTool selectedTool;
+  private ArrayList<AbstractTool> tools;
+  private AbstractTool selectedTool;
   
-  boolean isDrawing;
-  float initX, initY;
+  private float initX, initY;
   
   
   public ToolBarModel(float canvasW, float canvasH) {
@@ -44,9 +43,6 @@ public class ToolBarModel {
     
     setToolbarSelected(false);
     setToolbarMoving(false);
-    
-    isDrawing = false;
-
   }
   
   
@@ -133,7 +129,7 @@ public class ToolBarModel {
   }
   
   
-  public boolean getDrawingState(float x, float y) {
+  public boolean canvasHit(float x, float y) {
     if (!toolbarHit(x, y) && !iconsHit(x, y)) {
       return true;
     } else {
@@ -241,7 +237,7 @@ public class ToolBarModel {
   public void pressCheck(float pressX, float pressY) {
     // if the toolbar was clicked (and not an icon) set toolbar as selected and get ready to move the toolbar.
     if (toolbarHit(pressX, pressY)) {
-//      setToolbarSelected(true);
+      setToolbarSelected(true);
       xOffset = pressX - toolbarX;
       yOffset = pressY - toolbarY;
       

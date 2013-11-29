@@ -8,29 +8,29 @@ public class WiimoteListener implements WiiRemoteListener {
  }
  
  public void buttonInputReceived(WRButtonEvent e) {
-   if (e.isPressed(WRButtonEvent.B)) {
-     remote.disconnect();
-   }
-   if (e.wasReleased(WRButtonEvent.PLUS)) {
-     if(lineWidth <= 20)
-       lineWidth++;
-   }
-   if (e.wasReleased(WRButtonEvent.MINUS)) {
-     if(lineWidth>0)
-       lineWidth--;
-   }
-   if(e.wasReleased(WRButtonEvent.LEFT)) {
-     if(fillColour>0)
-       fillColour--;
-     else if (0 == fillColour)
-       fillColour = 5;
-   }
-   if (e.wasReleased(WRButtonEvent.RIGHT)) {
-     if(fillColour<5)
-       fillColour++;
-     else if(5 == fillColour)
-       fillColour = 0;
-   }
+//   if (e.isPressed(WRButtonEvent.B)) {
+////     remote.disconnect();
+//   }
+//   if (e.wasReleased(WRButtonEvent.PLUS)) {
+//     if(lineWidth <= 20)
+//       lineWidth++;
+//   }
+//   if (e.wasReleased(WRButtonEvent.MINUS)) {
+//     if(lineWidth>0)
+//       lineWidth--;
+//   }
+//   if(e.wasReleased(WRButtonEvent.LEFT)) {
+//     if(fillColour>0)
+//       fillColour--;
+//     else if (0 == fillColour)
+//       fillColour = 5;
+//   }
+//   if (e.wasReleased(WRButtonEvent.RIGHT)) {
+//     if(fillColour<5)
+//       fillColour++;
+//     else if(5 == fillColour)
+//       fillColour = 0;
+//   }
  }
  
  public void extensionInputReceived(WRExtensionEvent e) { 

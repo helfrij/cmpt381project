@@ -4,6 +4,7 @@ public class SketchTool extends AbstractTool {
     iconColor = color(97, 130, 150); 
   }
   
+  
   public void drawIcon(float x, float y, float size) {
     iconX = x;
     iconY = y;
@@ -16,22 +17,7 @@ public class SketchTool extends AbstractTool {
   }
   
   
-  public void setFirstPoint(float x, float y) {
-    
-  }
-  
-  
-  public void addPoint(float x, float y) {
-    
-  }
-  
-  
-  public void setLastPoint(float x, float y) {
-    
-  }
-  
-  
-  public AbstractShape createCanvasObject() {
+  public AbstractShape createCanvasShape() {
     return null;
   }  
 }

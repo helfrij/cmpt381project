@@ -1,57 +1,61 @@
 public class CanvasModel {
   
-  ArrayList<AbstractShape> canvasContents;
-  AbstractShape selectedShape;
-  
-  boolean isDrawing;
+  ArrayList<AbstractShape> canvasContents;  
   AbstractShape currentShape;
+  
   
   public CanvasModel() {
     canvasContents = new ArrayList<AbstractShape>();
-    isDrawing = false;
     currentShape = null;
   }
   
   
-  public void setDrawingState(boolean newState) {
-    isDrawing = newState;
+  public AbstractShape getCurrentShape() {
+    return currentShape; 
   }
   
   
-  public boolean getDrawingState() {
-    return isDrawing; 
+  public void setCurrentShape(AbstractShape shape) {
+    currentShape = shape;
   }
   
   
   public void addShape(AbstractShape newShape) {
-    if (isDrawing) {
-      if (newShape == null) {
-        return;
-      }
-    
-    canvasContents.add(newShape);
+    if (newShape != null) {
+      canvasContents.add(newShape);
     }
   }
   
   
-  public void startNewShape(AbstractShape newShape) {
-     setDrawingState(true);
-     currentShape = newShape;
-  }
+//  public void startNewShape(AbstractShape newShape, float xPos, float yPos) {
+//     setCurrentShape(newShape);
+//     
+//     if (currentShape != null) {
+//       currentShape.addPoint(xPos, yPos);
+//     }
+//  }
   
   
-  public void addToShape(float x, float y) {
-    currentShape.addPoint(x, y);
-  }
+//  public void addToShape(float x, float y) {
+//    if (currentShape != null) {
+//      currentShape.addPoint(x, y);
+//    }
+//  }
   
   
-  public void finishNewShape(float x, float y) {
-     if (getDrawingState() && currentShape != null) {
-       currentShape.addLastPoint(x, y);
-       canvasContents.add(currentShape);
-       currentShape = null;
-       setDrawingState(false);
-     }
+//  public void finishNewShape(float x, float y) {
+//     if (currentShape != null) {
+//       currentShape.addLastPoint(x, y);
+//       addShape(currentShape);
+//       currentShape = null;
+//     }
+//  }
+  
+  
+  public void deleteShape() {
+    if (currentShape != null) {
+
+    }
   }
   
   

@@ -17,22 +17,7 @@ public class NoTool extends AbstractTool {
   }
   
   
-  public void setFirstPoint(float x, float y) {
-    
-  }
-  
-  
-  public void addPoint(float x, float y) {
-    
-  }
-  
-  
-  public void setLastPoint(float x, float y) {
-    
-  }
-  
-  
-  public AbstractShape createCanvasObject() {
+  public AbstractShape createCanvasShape() {
     // no tool means no drawings!
     return null;
   }

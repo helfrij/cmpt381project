@@ -1,4 +1,5 @@
 abstract class AbstractTool {
+  
   float iconX, iconY, iconSize;
   color iconColor;
   
@@ -15,7 +16,7 @@ abstract class AbstractTool {
   boolean isSelected = false;
 
   public abstract void drawIcon(float xPos, float yPos, float size);
-  public abstract AbstractShape createCanvasObject();
+  public abstract AbstractShape createCanvasShape();
   
   public color getIconColor() {
     return iconColor; 

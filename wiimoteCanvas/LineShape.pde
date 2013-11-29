@@ -1,35 +1,18 @@
 public class LineShape extends AbstractShape {
   
-  FloatList xCoords;
-  FloatList yCoords;
-  int pointCount;
-  
-  int lineWeight;
-  color lineColor;
-  
-  
+  private ArrayList<Point> points;
+    
   public LineShape() {
-    pointCount = 0;
+    points = new ArrayList<Point>();
+    
+    lineWidth = 2;
+    lineColor = color(0, 0, 0);
     isSelected = false;
   }
   
   
   public void addPoint(float xPos, float yPos) {
-   // because a straight line only needs two points, we ignore intermediate points that would be added here. 
-   if (pointCount == 0) {
-     xCoords.add(pointCount, xPos);
-     yCoords.add(pointCount, yPos);
-     pointCount++;
-   }
-  }
-  
-  
-  public void addLastPoint(float xPos, float yPos) {
-    if (pointCount == 1) {
-      xCoords.add(pointCount, xPos);
-      yCoords.add(pointCount, yPos); 
-      pointCount++;
-    }
+    points.add(new Point(xPos, yPos));
   }
   
   
@@ -38,21 +21,18 @@ public class LineShape extends AbstractShape {
   }
   
   
-  public void setSelected(boolean selected) {
-    isSelected = selected;
-  }
-  
-  
   public void drawShape() {
+    int pointCount = points.size();
     
-    float startX = xCoords.get(0);
-    float startY = yCoords.get(0);
-    float endX = xCoords.get(1);
-    float endY = yCoords.get(1);
+    if (pointCount >= 2) {
+      Point startPoint = points.get(0);
+      Point endPoint = points.get(pointCount - 1);
     
-    fill(lineColor);
-    strokeWeight(lineWeight);
-    line(startX, startY, endX, endY);
+      fill(lineColor);
+      stroke(lineColor);
+      strokeWeight(lineWidth);
+      line(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+    }
   }
   
 }
