@@ -30,7 +30,7 @@ public class ToolBar {
   }
   
   
-  public void showToolBar() {
+  public void showToolbar() {
     isShown = true;
   }
   

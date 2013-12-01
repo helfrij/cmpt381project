@@ -3,10 +3,11 @@ abstract class AbstractShape {
   int lineWidth;
   color lineColor;
   boolean isSelected;
+  boolean isHoverSelected;
+  boolean isDrawn;
   
 //  public abstract void addFirstPoint(float xPos, float yPos);
   public abstract void addPoint(float xPos, float yPos);
-//  public abstract void addLastPoint(float xPos, float yPos);
   public abstract void drawShape();
   public abstract boolean checkHit(float x, float y);
   
@@ -15,9 +16,18 @@ abstract class AbstractShape {
     return isSelected;
   }
   
+  public boolean isHoverSelected() {
+    return isHoverSelected;
+  }
+  
   
   public void setSelected(boolean selected) {
     isSelected = selected; 
+  }
+  
+  
+  public void setHoverSelected(boolean hoverSelected) {
+    isHoverSelected = hoverSelected;
   }
   
   
@@ -28,6 +38,18 @@ abstract class AbstractShape {
   
   public void setLineColor(color newColor) {
     lineColor = newColor; 
+  }
+  
+  
+  public void hideShape() {
+    isDrawn = false;
+  }
+  
+  
+  public void hoverSelect(boolean shapeHit) {
+    if (!isSelected) {
+      setHoverSelected(shapeHit);
+    }
   }
   
 }

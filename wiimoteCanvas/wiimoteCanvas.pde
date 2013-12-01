@@ -5,6 +5,9 @@ private color cursorColor;
 
 private int canvasH, canvasW;
 
+
+private WiiRemoteJ deviceFinder;
+private WiiRemote remote;
 private WiimoteListener deviceListener;
 private ToolBar toolbar;
 private CanvasModel model;
@@ -31,6 +34,10 @@ void setup() {
   // do not display default cursor
   noCursor();
   
+  // create instance of wiiremote
+//  deviceFinder = new WiiRemoteJ();
+// remote = new WiiRemote();
+  
   // set up wiimote listener
   deviceListener = new WiimoteListener();
   
@@ -39,6 +46,23 @@ void setup() {
 
   // set up the toolbar, stores the available tools.
   toolbar = new ToolBar(canvasW, canvasH);
+}
+
+
+public void saveCanvas() {
+  toolbar.hideToolbar();
+  model.saveDrawing();
+  toolbar.showToolbar();
+}
+
+
+public void switchColor() {
+  model.switchColor();
+}
+
+
+public void switchLineWidth() {
+  model.switchLineWidth(); 
 }
 
 
@@ -55,10 +79,6 @@ void draw() {
   
   // draw shapes.
   model.drawShapes();
-  
-  if (drawingShape != null) {
-    drawingShape.drawShape(); 
-  }
   
   // draw toolbar.
   toolbar.drawToolBar();
@@ -84,23 +104,26 @@ void mouseMoved() {
   
   if (!mousePressed) {
     toolbar.hoverCheck(cursorX, cursorY);
+    model.hoverCheck(cursorX, cursorY);
   }
 }
 
 
 void mouseClicked() {
   toolbar.clickCheck(mouseX, mouseY);
+  model.clickCheck(mouseX, mouseY);
 }
 
 
 
 void mousePressed() {
   toolbar.pressCheck(mouseX, mouseY);
+  model.clickCheck(mouseX, mouseY);
   
   // if the press landed on the canvas (not on any toolbar items) and the selected tool is valid, begin drawing a new shape.
-  if (toolbar.canvasHit(mouseX, mouseY) && toolbar.selectedToolExists()) {
+  if (toolbar.canvasHit(mouseX, mouseY) && toolbar.selectedToolExists() && model.canvasHit(mouseX, mouseY)) {
     AbstractShape newShape = toolbar.getSelectedTool().createCanvasShape();
-    drawingShape = newShape;
+    model.setDrawingShape(newShape);
   }
 }
 
@@ -108,12 +131,7 @@ void mousePressed() {
 
 void mouseReleased() {
   toolbar.released(mouseX, mouseY); 
-  
-  if (drawingShape != null) {
-    model.addShape(drawingShape); 
-  }
-  
-  drawingShape = null;
+  model.addDrawingToCanvas();
 }
 
 
@@ -123,10 +141,36 @@ void mouseDragged() {
   cursorY = mouseY;
   
   toolbar.dragCheck(cursorX, cursorY);
+  model.drawShape(cursorX, cursorY);
   
-  if (drawingShape != null) {
-    drawingShape.addPoint(cursorX, cursorY); 
-  }
-  
+}
+
+
+void keyPressed() {
+//  if(CODED == key) {
+//    if(SHIFT == keyCode) {
+//      control = !control;
+//    }
+//  }
+//  else {
+//    if(('a' == key) && (lineWidth<=20)) {
+//      lineWidth++;
+//    }
+//    else if(('s' == key) && (lineWidth>0)) {
+//      lineWidth--;
+//    }
+//    else if(('c' == key) && (fillColour<5)) {
+//      fillColour++;
+//    }
+//    else if(('c' == key) && (5==fillColour)) {
+//      fillColour = 0;
+//    }
+//    else if(('v' == key) && (fillColour>0)) {
+//      fillColour--;
+//    }
+//    else if(('v' == key) && (0 == fillColour)) {
+//      fillColour = 5;
+//    }
+//  }
 }
 
