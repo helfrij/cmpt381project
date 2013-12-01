@@ -1,4 +1,4 @@
-public class LineShape extends AbstractShape {
+public class LineShape extends AbstractLineShape {
   
   private ArrayList<Point> points;
   private int clickBuffer;

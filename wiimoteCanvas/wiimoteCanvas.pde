@@ -9,7 +9,10 @@ private int canvasH, canvasW;
 private WiiRemoteJ deviceFinder;
 private WiiRemote remote;
 private WiimoteListener deviceListener;
+
+private NoToolbar noToolbar;
 private ToolBar toolbar;
+
 private CanvasModel model;
 
 private AbstractShape drawingShape;
@@ -42,27 +45,20 @@ void setup() {
   deviceListener = new WiimoteListener();
   
   // set up the model, stores the shapes drawn on the canvas.
-  model = new CanvasModel();
+  model = new CanvasModel(canvasW, canvasH);
 
-  // set up the toolbar, stores the available tools.
+  // set up the toolbars.
+  noToolbar = new NoToolbar();
+  model.addToolbar(noToolbar);
+  
   toolbar = new ToolBar(canvasW, canvasH);
+  model.addToolbar(toolbar);
 }
 
 
 public void saveCanvas() {
-  toolbar.hideToolbar();
+  model.hideToolbars();
   model.saveDrawing();
-  toolbar.showToolbar();
-}
-
-
-public void switchColor() {
-  model.switchColor();
-}
-
-
-public void switchLineWidth() {
-  model.switchLineWidth(); 
 }
 
 
@@ -80,8 +76,10 @@ void draw() {
   // draw shapes.
   model.drawShapes();
   
-  // draw toolbar.
+  // draw toolbars.
   toolbar.drawToolBar();
+  
+  // current tool determines the color of the cursor.
   cursorColor = toolbar.getCursorColor();
   
   // draw cursor.
@@ -147,30 +145,35 @@ void mouseDragged() {
 
 
 void keyPressed() {
-//  if(CODED == key) {
-//    if(SHIFT == keyCode) {
-//      control = !control;
-//    }
-//  }
-//  else {
-//    if(('a' == key) && (lineWidth<=20)) {
-//      lineWidth++;
-//    }
-//    else if(('s' == key) && (lineWidth>0)) {
-//      lineWidth--;
-//    }
-//    else if(('c' == key) && (fillColour<5)) {
-//      fillColour++;
-//    }
-//    else if(('c' == key) && (5==fillColour)) {
-//      fillColour = 0;
-//    }
-//    else if(('v' == key) && (fillColour>0)) {
-//      fillColour--;
-//    }
-//    else if(('v' == key) && (0 == fillColour)) {
-//      fillColour = 5;
-//    }
-//  }
+  
+  if ( ' ' == key) {
+    model.switchToolbar();
+    
+  } else {
+      if ('a' == key) {
+      model.switchLineWidth();
+      
+    } else if ('c' == key) {
+      model.switchLineColor();
+      
+    } else if ('j' == key) {
+      model.decreaseR();
+      
+    } else if ('u' == key) {
+      model.increaseR();
+      
+    } else if ('k' == key) {
+      model.decreaseG();
+      
+    } else if ('i' == key) {
+      model.increaseG();
+      
+    } else if ('l' == key) {
+      model.decreaseB();
+      
+    } else if ('o' == key) {
+      model.increaseB();
+    }
+  }
 }
 

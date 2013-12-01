@@ -1,4 +1,4 @@
-public class ToolBar {
+public class ToolBar extends AbstractToolbar {
   
   private int canvasH, canvasW;
   
@@ -24,7 +24,7 @@ public class ToolBar {
     isSelected = false;
     isMoving = false;
     isVertical = true;
-    isShown = true;
+    isShown = false;
     
     toolsModel = new ToolBarModel(canvasWidth, canvasHeight);
   }
