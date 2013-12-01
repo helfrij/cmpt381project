@@ -2,32 +2,51 @@ public class LineShape extends AbstractShape {
   
   private ArrayList<Point> points;
   private int clickBuffer;
+  private float minX, maxX, minY, maxY;
     
   public LineShape() {
     points = new ArrayList<Point>();
-    clickBuffer = 10;
+    clickBuffer = 15;
+    
+    minX = 0;
+    maxX = 0;
+    minY = 0;
+    maxY = 0;
     
     lineWidth = 2;
     lineColor = color(0, 0, 0);
     isSelected = false;
     isDrawn = true;
+    isHoverSelected = false;
   }
   
   
   public void addPoint(float xPos, float yPos) {
     points.add(new Point(xPos, yPos));
+    
+    if (xPos < minX) {
+      minX = xPos; 
+    }
+    
+    if (xPos > maxX) {
+      maxX = xPos; 
+    }
+    
+    if (yPos < minY) {
+      minY = yPos; 
+    }
+    
+    if (yPos > maxY) {
+      maxY = yPos; 
+    }
   }
   
   
   public boolean checkHit(float x, float y) {
-    for (Point point : points) {
-      float pointX = point.getX();
-      float pointY = point.getY();
       
-      if (pointX < (x + clickBuffer) && pointX > (x - clickBuffer)) {
-        if (pointY < (y + clickBuffer) && pointY > (y - clickBuffer)) {
-          return true;
-        }
+    if (x < (maxX + clickBuffer) && x > (minX - clickBuffer)) {
+      if (y < (maxY + clickBuffer) && y > (maxY - clickBuffer)) {
+        return true;
       }
     }
     

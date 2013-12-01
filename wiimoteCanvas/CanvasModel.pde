@@ -108,20 +108,14 @@ public class CanvasModel {
   
   
   public void clickCheck(float xPos, float yPos) {
-    if (canvasHit(xPos, yPos) == true) {
-      clearSelectedShapes();
+    clearSelectedShapes();
       
-    } else {
-      
-      for (AbstractShape shape : canvasContents) {
-        if (shape.checkHit(xPos, yPos) == true) {
-          shape.setSelected(true);
-          addShapeToSelection(shape);
-        }
+    for (AbstractShape shape : canvasContents) {
+      if (shape.checkHit(xPos, yPos) == true) {
+        shape.setSelected(true);
+        addShapeToSelection(shape);
       }
     }
-    
-
   }
   
   
@@ -157,7 +151,7 @@ public class CanvasModel {
     }
     
     for (AbstractShape shape : selectedShapes) {
-//      shape.setColor( color( colours[colorIndex] ) );
+      shape.setLineColor( color( colours[colorIndex] ) );
     }
   }
   

@@ -1,14 +1,16 @@
 public class SketchShape extends AbstractShape {
   
   private ArrayList<Point> points;
+  int clickBuffer;
   
   public SketchShape() {
     isSelected = false;
     lineWidth = 2;
     lineColor = color(0, 0, 0);
-    isSelected = false;
     isDrawn = true;
+    isHoverSelected = false;
     points = new ArrayList<Point>();
+    clickBuffer = 15;
   }
   
   
@@ -18,6 +20,17 @@ public class SketchShape extends AbstractShape {
   
   
   public boolean checkHit(float x, float y) {
+    for (Point point : points) {
+      float pointX = point.getX();
+      float pointY = point.getY();
+      
+      if (pointX < (x + clickBuffer) && pointX > (x - clickBuffer)) {
+        if (pointY < (y + clickBuffer) && pointY > (y - clickBuffer)) {
+          return true;
+        }
+      }
+    }
+    
     return false;
   }
   
@@ -33,7 +46,7 @@ public class SketchShape extends AbstractShape {
         if (isSelected || isHoverSelected) {
           fill(255);
           stroke(255);
-          strokeWeight(lineWidth + 1);
+          strokeWeight(lineWidth + 10);
           line(point1.getX(), point1.getY(), point2.getX(), point2.getY());
         }
       
