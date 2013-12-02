@@ -5,12 +5,10 @@ public class ToolBar extends AbstractToolbar {
   private float xOffset = 0.0;
   private float yOffset = 0.0;
   
-  private int selectedWeight, deselectedWeight;
+//  private int selectedWeight, deselectedWeight;
   
-  private boolean isSelected;
-  private boolean isMoving;
-  private boolean isVertical;
-  private boolean isShown;
+//  private boolean isSelected;
+//  private boolean isMoving;
   
   private ToolBarModel toolsModel;
   
@@ -19,11 +17,10 @@ public class ToolBar extends AbstractToolbar {
     canvasH = canvasHeight;
     
     selectedWeight = 4;
-    deselectedWeight = 2;
+    normalWeight = 2;
     
     isSelected = false;
-    isMoving = false;
-    isVertical = true;
+//    isMoving = false;
     isShown = false;
     
     toolsModel = new ToolBarModel(canvasWidth, canvasHeight);
@@ -31,12 +28,12 @@ public class ToolBar extends AbstractToolbar {
   
   
   public void showToolbar() {
-    isShown = true;
+    toolsModel.showToolbar();
   }
   
   
   public void hideToolbar() {
-    isShown = false;
+    toolsModel.hideToolbar();
   }
   
   
@@ -56,44 +53,23 @@ public class ToolBar extends AbstractToolbar {
   
   
   private void setMoving(boolean moving) {
-    isMoving = moving; 
+//    isMoving = moving; 
   }
   
   
-  private void setVertical() {
-//    float oldW = toolsModel.getToolbarW();
-//    float oldH = toolsModel.getToolbarH();
-//    
-//    // if the toolbar is already in the vertical orientation, make no changes.
-//    if (isVertical == true || oldW <= oldH) {
-//      return; 
-//    }
-//    
-//    if (oldW > oldH) {
-//      toolsModel.setVertical();
-//      isVertical = true; 
-//    }
+  public boolean iconsHit(float hitX, float hitY) {
+    return toolsModel.iconsHit(hitX, hitY);
   }
   
   
-  private void setHorizontal() {
-//    float oldW = toolsModel.getToolbarW();
-//    float oldH = toolsModel.getToolbarH();
-//    
-//    // if the toolbar is already in the horizontal orientation, make no changes.
-//    if (isVertical == false || oldH <= oldW) {
-//      return; 
-//    }
-//    
-//    if (oldH > oldW) {
-//      toolsModel.setHorizontal();
-//      isVertical = false;
-//    }
-  }
-  
-  
-  private boolean wasClicked(int x, int y) {
+  public boolean toolbarHit(float x, float y) {
     return toolsModel.toolbarHit(x, y);
+
+  }
+  
+  
+  public boolean toolbarBorderHit(float x, float y) {
+    return toolsModel.toolbarBorderHit(x, y);
   }
   
   
@@ -122,13 +98,17 @@ public class ToolBar extends AbstractToolbar {
   }
   
   
-  public void released(float lastX, float lastY) {
+  public void release(float lastX, float lastY) {
     toolsModel.release(lastX, lastY);
   }
   
   
-  public boolean canvasHit(float pressX, float pressY) {
-    return toolsModel.canvasHit(pressX, pressY); 
+  public AbstractShape createNewShape() {
+    if (selectedToolExists()) {
+      return getSelectedTool().createCanvasShape();
+    }
+    
+    return null;
   }
   
   
@@ -137,9 +117,9 @@ public class ToolBar extends AbstractToolbar {
   }
   
   
-  public void drawToolBar() {
+  public void drawToolbar() {
     
-    if (isShown) {
+    if (toolsModel.toolbarShown()) {
       fill(toolsModel.getToolbarColor());
       stroke(255);
       strokeWeight(toolsModel.getToolbarWeight());

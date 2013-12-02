@@ -1,28 +1,45 @@
 public abstract class AbstractToolbarModel {
   
-  private float canvasHeight, canvasWidth;
+  float canvasHeight, canvasWidth;
   
-  private float toolbarX, toolbarY;
-  private float toolbarW, toolbarH;
-  private boolean toolbarSelected;
-  private boolean toolbarMoving;
-  private float xOffset, yOffset;
-  private color toolbarColor;
+  boolean isDrawn;
   
-  private int selectedWeight = 4;
-  private int normalWeight = 2;
-  private int hoverWeight = 4;
-  private int toolbarWeight;
+  float toolbarX, toolbarY;
+  float toolbarW, toolbarH;
+  boolean toolbarSelected;
+  boolean toolbarMoving;
+  float xOffset, yOffset;
+  color toolbarColor;
   
-  private float iconX, iconY, iconSize;
-  private float iconCushion;
+  int selectedWeight = 4;
+  int normalWeight = 2;
+  int hoverWeight = 4;
+  int toolbarWeight;
   
-  private int toolCount = 0;
+  float iconX, iconY;
+  float iconSize = 100;
+  float iconCushion;
   
-  private ArrayList<AbstractTool> tools;
-  private AbstractTool selectedTool;
+  int toolCount = 0;
   
-  private float initX, initY;
+  AbstractTool selectedTool;
+  
+  public abstract void drawIcons();
+  public abstract void loadTools();
+  public abstract void setSelectedTool(AbstractTool tool);
+  public abstract void setToolbarSelected(boolean isSelected);
+  public abstract boolean selectedToolExists();
+  public abstract AbstractTool getSelectedTool();
+  
+  public abstract boolean iconsHit(float x, float y);
+  public abstract boolean toolbarBorderHit(float x, float y);
+  public abstract boolean toolbarHit(float x, float y);
+
+  public abstract void iconHoverCheck(float cursorX, float cursorY);
+  public abstract void clickCheck(float clickX, float clickY);
+  public abstract void pressCheck(float pressX, float pressY);
+  public abstract void dragCheck(float dragX, float dragY);
+  public abstract void release(float xPos, float yPos);
   
   
   public float getToolbarX() {
@@ -55,81 +72,51 @@ public abstract class AbstractToolbarModel {
   }
   
   
-  public abstract void loadTools();
-  
-  
-  public void setToolbarSelected(boolean isSelected) {
-    toolbarSelected = isSelected;
-    
-    if (toolbarSelected) {
-      toolbarWeight = selectedWeight; 
-    } else {
-      toolbarWeight = normalWeight;
-    }
+  public void showToolbar() {
+    isDrawn = true;
   }
   
   
-  public boolean selectedToolExists() {
-    if (selectedTool == null) {
-      return false;
-    } else {
-      return true;
-    } 
+  public void hideToolbar() {
+    isDrawn = false;
   }
   
   
-  public AbstractTool getSelectedTool() {
-    return selectedTool; 
+  public boolean toolbarShown() {
+    return isDrawn;
   }
   
   
-  public boolean canvasHit(float x, float y) {
-    if (!toolbarHit(x, y) && !iconsHit(x, y)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
   
   
-  private void setSelectedTool(AbstractTool tool) {
-    // deselect the old selected tool, if it exists.
-    if (selectedTool != null) {
-      selectedTool.setSelected(false);
-    }
-    
-    // set the new selected tool.
-    if (tool != null) {
-      selectedTool = tool;
-      tool.setSelected(true); 
-    }
-  }
+
   
   
-  public boolean toolbarHit(float x, float y) {
-    // check to see if the click occurred within the bounds of the toolbar rectangle.
-    if (x > toolbarX && x < toolbarX + toolbarW && y > toolbarY && y < toolbarY + toolbarH) {
-      if (iconsHit(x, y)) {
-        return false; // click was in-bounds, but an icon was hit.
-      } else {
-        return true; // click was in-bounds and no icons were hit.
-      }
-    } else {
-      return false; // click was out of bounds.
-    }
-  }
-  
-  
-  public boolean iconsHit(float x, float y) {
-    
-    for(AbstractTool tool : tools) {
-      if (tool.iconHit(x, y)) {
-        return true;
-      }
-    } 
-    
-    return false;
-  }
+//  public boolean toolbarHit(float x, float y) {
+//    if (isDrawn) {
+//      boolean wasHit = (x > toolbarX && x < toolbarX + toolbarW && y > toolbarY && y < toolbarY + toolbarH);
+//      return wasHit;
+//    }
+//    
+//    return false;
+//  }
+//  
+//
+//  
+//  
+//  public boolean toolbarBorderHit(float x, float y) {
+//    // check to see if the click occurred within the bounds of the toolbar rectangle.
+//    if (toolbarHit(x, y)) {
+//      if (iconsHit(x, y)) {
+//        return false; // click was in-bounds, but an icon was hit.
+//      } else {
+//        return true; // click was in-bounds and no icons were hit.
+//      }
+//    } else {
+//      return false; // click was out of bounds.
+//    }
+//  }
   
   
   public void shiftCoords(float newX, float newY) {
@@ -139,78 +126,7 @@ public abstract class AbstractToolbarModel {
     } 
   }
   
-  
-  public void drawIcons() {
-    int count = 0;
-    for (AbstractTool tool : tools) {
-      iconX = toolbarX + iconCushion;
-      iconY = toolbarY + iconCushion + (iconSize + iconCushion) * count;
-      tool.drawIcon(iconX, iconY, iconSize);
-      count++;
-    }
-  }
-  
-  
-  public void iconHoverCheck(float cursorX, float cursorY) {
-    for (AbstractTool tool: tools) {
-      tool.iconHoverCheck(cursorX, cursorY);
-    }
-  }
-  
-  
-  public void clickCheck(float clickX, float clickY) {
-    // if the toolbar (and only the toolbar) was hit by the click, make toolbar selected.
-    if (toolbarHit(clickX, clickY)) {
-      setToolbarSelected(true);
-    } else {
-      setToolbarSelected(false);
-    }
     
-    // if one of the icons was hit by the click, make that one the selected tool.
-    if (iconsHit(clickX, clickY)) {
-      for (AbstractTool tool : tools) {
-        if (tool.iconHit(clickX, clickY)) {
-          setSelectedTool(tool);
-          break;
-        } 
-      }
-    }
-  }
-  
-  
-  public void pressCheck(float pressX, float pressY) {
-    // if the toolbar was clicked (and not an icon) set toolbar as selected and get ready to move the toolbar.
-    if (toolbarHit(pressX, pressY)) {
-      setToolbarSelected(true);
-      xOffset = pressX - toolbarX;
-      yOffset = pressY - toolbarY;
-      
-    // else, make sure the toolbar is deselected.
-    } else {
-      setToolbarSelected(false);
-      xOffset = 0.0;
-      yOffset = 0.0;
-      
-    }
-  }
-  
-  
-  public void dragCheck(float xPos, float yPos) {
-//    // if the toolbar is selected, the operation the user will perform is moving the toolbar.
-//    if (toolbarSelected) {
-//      setToolbarMoving(true);
-//      float newX = xPos - xOffset;
-//      float newY = yPos - yOffset;
-//      shiftCoords(newX, newY);
-//    }
-  }
-  
-  
-  public void release(float xPos, float yPos) {
-    setToolbarSelected(false);
-//    setToolbarMoving(false); 
-    xOffset = 0.0;
-    yOffset = 0.0;
-  }
+
   
 }

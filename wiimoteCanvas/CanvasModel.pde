@@ -2,25 +2,16 @@ public class CanvasModel {
   
   int toolbarIndex;
   private ArrayList<AbstractToolbar> toolbars;
+//  NoToolbar noToolbar;
+  ToolBar mainToolbar;
+//  ColorToolbar colorToolbar;
+
+  
   private ArrayList<AbstractShape> canvasContents;  
   private ArrayList<AbstractShape> selectedShapes;
   private AbstractShape drawingShape;
   
   private int canvasWidth, canvasHeight;
-  
-  private int[][] colours;
-  private int colorIndex;
-  private int rVal, gVal, bVal;
-
-  private int []black = {0, 0, 0};
-  private int[] red = {255, 0, 0};
-  private int[] orange = {255, 165, 0};
-  private int[] yellow = {255, 255, 0};
-  private int[] green = {34, 139, 34};
-  private int[] blue = {0, 191, 255};
-  private int[] indigo = {75, 0, 130}; 
-  private int[] violet = {148, 0, 211};
-  
   private int lineWidth;
 
   
@@ -31,25 +22,19 @@ public class CanvasModel {
     
     toolbarIndex = 0;
     toolbars = new ArrayList<AbstractToolbar>();
+    
+//    noToolbar = new NoToolbar();
+//    addToolbar(noToolbar);
+    
+    mainToolbar = new ToolBar(canvasWidth, canvasHeight);
+    addToolbar(mainToolbar);
+    
+//    colorToolbar = new ColorToolbar(canvasWidth, canvasHeight);
+//    addToolbar(colorToolbar);
+    
     canvasContents = new ArrayList<AbstractShape>();
     selectedShapes = new ArrayList<AbstractShape>();
     drawingShape = null;
-    
-    rVal = 0;
-    gVal = 0;
-    bVal = 0;
-    
-    // create a list of colors to select from for the shapes.
-    colorIndex = 0;
-    colours = new int[8][3];
-    colours[0] = black;
-    colours[1] = red;
-    colours[2] = orange;
-    colours[3] = yellow;
-    colours[4] = green;
-    colours[5] = blue;
-    colours[6] = indigo;
-    colours[7] = violet;   
 
     lineWidth = 1;
   }
@@ -68,9 +53,22 @@ public class CanvasModel {
     }
   }
   
+  
+  public void drawToolbars() {
+    for (AbstractToolbar toolbar : toolbars) {
+      toolbar.drawToolbar();
+    }
+  }
+  
+  
+  public color getCursorColor() {
+    return mainToolbar.getCursorColor();
+  }
+  
 
   private void addShapeToSelection(AbstractShape shape) {
     if (shape != null) {
+      shape.setSelected(true);
       selectedShapes.add(shape); 
     }
   }
@@ -104,8 +102,8 @@ public class CanvasModel {
   public void setDrawingShape(AbstractShape newShape) {
     if (newShape != null) {
       drawingShape = newShape;
-      color lineColor = color(colours[colorIndex][0], colours[colorIndex][1], colours[colorIndex][2]);
-      drawingShape.setLineColor(lineColor);
+//      color lineColor = color(colours[colorIndex][0], colours[colorIndex][1], colours[colorIndex][2]);
+//      drawingShape.setLineColor(lineColor);
       
       clearSelectedShapes();
       selectedShapes.add(drawingShape); 
@@ -138,6 +136,7 @@ public class CanvasModel {
   
   
   public boolean shapeHit(float clickX, float clickY) {
+    
     for (AbstractShape shape : canvasContents) {
       if (shape.checkHit(clickX, clickY) == true) {
         return true;
@@ -148,19 +147,41 @@ public class CanvasModel {
   }
   
   
+  public boolean selectedToolExists() {
+    return mainToolbar.selectedToolExists();
+  }
+  
+  
   public void clickCheck(float xPos, float yPos) {
     clearSelectedShapes();
+    
+    // if a part of empty canvas was clicked, then we begin creating a new shape.
+    if (canvasHit(xPos, yPos)) {
+      AbstractShape newShape = mainToolbar.createNewShape();
+      setDrawingShape(newShape);
       
-    for (AbstractShape shape : canvasContents) {
-      if (shape.checkHit(xPos, yPos) == true) {
-        shape.setSelected(true);
-        addShapeToSelection(shape);
+    // if one of the toolbars was hit, forward the "clickCheck" to whichever toolbar was hit.
+    } else if (toolbarHit(xPos, yPos)) {
+      
+      for (AbstractToolbar toolbar : toolbars) {
+        toolbar.clickCheck(xPos, yPos);
+      }
+      
+    // if one of the shapes drawn on the canvas was hit, set that shape as the selected shape.
+    } else if (shapeHit(xPos, yPos)) {
+      
+      for (AbstractShape shape : canvasContents) {
+        if (shape.checkHit(xPos, yPos)) {
+          addShapeToSelection(shape);
+        }
       }
     }
+
   }
   
   
   public void hoverCheck(float xPos, float yPos) {
+    // check to see if we are hovering over a canvas shape.
     for (AbstractShape shape : canvasContents) {
       if (shape.checkHit(xPos, yPos) == true) {
         shape.setHoverSelected(true);
@@ -168,93 +189,70 @@ public class CanvasModel {
         shape.setHoverSelected(false);
       }
     }
+    
+    // check if we are hovering over a toolbar.
+    for (AbstractToolbar toolbar : toolbars) {
+      toolbar.hoverCheck(xPos, yPos);
+    }
   }
   
   
-  public boolean canvasHit(float clickX, float clickY) {
-    if (shapeHit(clickX, clickY) == false) {
-      return true;
+  public boolean toolbarHit(float clickX, float clickY) {
+    for (AbstractToolbar toolbar : toolbars) {
+      if (toolbar.toolbarHit(clickX, clickY)) {
+        return true;
+      }
     }
     
     return false;
   }
   
   
+  public void dragCheck(float cursorX, float cursorY) {
+    // if we are drawing on the canvas, the drawing shape will not be null. Add new points to the shape.
+    drawShape(cursorX, cursorY);
+      
+    // else, we could be dragging a toolbar around. Forward the call to the toolbars to handle it themselves.
+    
+    for (AbstractToolbar toolbar : toolbars) {
+      toolbar.dragCheck(cursorX, cursorY);
+    } 
+  }
+  
+  
+  public void release(float lastX, float lastY) {
+    addDrawingToCanvas();
+    
+    for (AbstractToolbar toolbar : toolbars) {
+      toolbar.release(lastX, lastY);
+    }
+  }
+  
+  
+  public boolean canvasHit(float clickX, float clickY) {
+    // if either a shape or a toolbar was hit with the click, return false.
+    if (shapeHit(clickX, clickY) || toolbarHit(clickX, clickY)) {
+      return false;
+    }
+    // otherwise, part of the blank canvas was hit!
+    return true;
+  }
+  
+  
   public void saveDrawing() {
+//    AbstractToolbar selectedToolbar;
+//    selectedToolbar.hideToolbar();
     save("canvas.jpg");
+//    setSelectedToolbar(selectedToolbar);
   }
   
   
   public void switchLineColor() {
-    colorIndex++;
-    
-    if (colorIndex > colours.length - 1) {
-      colorIndex = 0;
-    }
-    
-    rVal = colours[colorIndex][0];
-    gVal = colours[colorIndex][1];
-    bVal = colours[colorIndex][2];
-    
-    color newColor = color(rVal, gVal, bVal);
-    
-    for (AbstractShape shape : selectedShapes) {
-      shape.setLineColor( newColor );
-    }
-  }
-  
-  
-  public void decreaseR() {
-    rVal--;
-    
-    if (rVal < 0) {
-      rVal = 0;
-    }
-  }
-  
-  
-  public void increaseR() {
-    rVal++;
-    
-    if (rVal > 255) {
-      rVal = 255; 
-    }
-  }
-  
-  
-  public void decreaseG() {
-    gVal--;
-    
-    if (gVal < 0) {
-      gVal = 0;
-    }
-  }
-  
-  
-  public void increaseG() {
-    gVal++;
-    
-    if (gVal > 255) {
-      gVal = 255;
-    }
-  }
-  
-  
-  public void decreaseB() {
-    bVal--;
-    
-    if (bVal < 0) {
-      bVal = 0;
-    }
-  }
-  
-  
-  public void increaseB() {
-    bVal++;
-    
-    if (bVal > 255) {
-      bVal = 255;
-    }
+//    color newColor = colorToolbar.switchLineColor();
+//    
+//    for (AbstractShape shape : selectedShapes) {
+//      shape.setLineColor(newColor);
+//    }
   }
   
   

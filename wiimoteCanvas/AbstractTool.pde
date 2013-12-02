@@ -1,6 +1,7 @@
 abstract class AbstractTool {
   
-  float iconX, iconY, iconSize;
+  float iconX, iconY;
+  float iconSize = 100;
   color iconColor;
   
   int selectedOpacity = 255;

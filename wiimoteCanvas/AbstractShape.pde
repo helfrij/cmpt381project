@@ -6,7 +6,6 @@ abstract class AbstractShape {
   boolean isHoverSelected;
   boolean isDrawn;
   
-//  public abstract void addFirstPoint(float xPos, float yPos);
   public abstract void addPoint(float xPos, float yPos);
   public abstract void drawShape();
   public abstract boolean checkHit(float x, float y);
