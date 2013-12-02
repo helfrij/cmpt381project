@@ -1,12 +1,12 @@
 public class LineShape extends AbstractLineShape {
   
   private ArrayList<Point> points;
-  private int clickBuffer;
+//  private int clickBuffer;
   private float minX, maxX, minY, maxY;
     
   public LineShape() {
     points = new ArrayList<Point>();
-    clickBuffer = 15;
+//    clickBuffer = 15;
     
     minX = 0;
     maxX = 0;
@@ -18,6 +18,7 @@ public class LineShape extends AbstractLineShape {
     isSelected = false;
     isDrawn = true;
     isHoverSelected = false;
+    rotationAngle = 0;
   }
   
   
@@ -51,6 +52,11 @@ public class LineShape extends AbstractLineShape {
     }
     
     return false;
+  }
+  
+  
+  public void setRotationAngle(float newAngle) {
+
   }
   
   

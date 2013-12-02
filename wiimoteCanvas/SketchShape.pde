@@ -1,7 +1,6 @@
 public class SketchShape extends AbstractLineShape {
   
   private ArrayList<Point> points;
-  int clickBuffer;
   
   public SketchShape() {
     isSelected = false;
@@ -10,7 +9,7 @@ public class SketchShape extends AbstractLineShape {
     isDrawn = true;
     isHoverSelected = false;
     points = new ArrayList<Point>();
-    clickBuffer = 15;
+    rotationAngle = 0;
   }
   
   
@@ -32,6 +31,11 @@ public class SketchShape extends AbstractLineShape {
     }
     
     return false;
+  }
+  
+  
+  public void setRotationAngle(float newAngle) {
+    
   }
   
   

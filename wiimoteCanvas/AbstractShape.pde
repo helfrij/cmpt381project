@@ -5,10 +5,14 @@ abstract class AbstractShape {
   boolean isSelected;
   boolean isHoverSelected;
   boolean isDrawn;
+  float rotationAngle;
+  int clickBuffer = 15;
   
   public abstract void addPoint(float xPos, float yPos);
   public abstract void drawShape();
   public abstract boolean checkHit(float x, float y);
+  public abstract void setRotationAngle(float newAngle);
+
   
   
   public boolean isSelected() {
@@ -50,5 +54,12 @@ abstract class AbstractShape {
       setHoverSelected(shapeHit);
     }
   }
+  
+  
+  public float getRotationAngle() {
+    return rotationAngle;
+  }
+  
+  
   
 }
