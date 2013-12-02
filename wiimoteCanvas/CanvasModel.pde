@@ -2,9 +2,9 @@ public class CanvasModel {
   
   int toolbarIndex;
   private ArrayList<AbstractToolbar> toolbars;
-//  NoToolbar noToolbar;
+  NoToolbar noToolbar;
   ToolBar mainToolbar;
-//  ColorToolbar colorToolbar;
+  ColorToolbar colorToolbar;
 
   
   private ArrayList<AbstractShape> canvasContents;  
@@ -23,14 +23,14 @@ public class CanvasModel {
     toolbarIndex = 0;
     toolbars = new ArrayList<AbstractToolbar>();
     
-//    noToolbar = new NoToolbar();
-//    addToolbar(noToolbar);
+    noToolbar = new NoToolbar();
+    addToolbar(noToolbar);
     
     mainToolbar = new ToolBar(canvasWidth, canvasHeight);
     addToolbar(mainToolbar);
     
-//    colorToolbar = new ColorToolbar(canvasWidth, canvasHeight);
-//    addToolbar(colorToolbar);
+    colorToolbar = new ColorToolbar(canvasWidth, canvasHeight);
+    addToolbar(colorToolbar);
     
     canvasContents = new ArrayList<AbstractShape>();
     selectedShapes = new ArrayList<AbstractShape>();

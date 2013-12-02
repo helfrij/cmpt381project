@@ -2,7 +2,7 @@ public abstract class AbstractToolbarModel {
   
   float canvasHeight, canvasWidth;
   
-  boolean isDrawn;
+  boolean isDrawn, isSelected;
   
   float toolbarX, toolbarY;
   float toolbarW, toolbarH;
