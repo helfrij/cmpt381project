@@ -248,11 +248,11 @@ public class CanvasModel {
   
   
   public void switchLineColor() {
-//    color newColor = colorToolbar.switchLineColor();
-//    
-//    for (AbstractShape shape : selectedShapes) {
-//      shape.setLineColor(newColor);
-//    }
+    color newColor = colorToolbar.switchLineColor();
+    
+    for (AbstractShape shape : selectedShapes) {
+      shape.setLineColor(newColor);
+    }
   }
   
   

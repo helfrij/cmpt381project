@@ -164,10 +164,7 @@ public class ColorToolbarModel extends AbstractToolbarModel {
     color newColor = color(rVal, gVal, bVal);
     
     return newColor;
-    
-//    for (AbstractShape shape : selectedShapes) {
-//      shape.setLineColor( newColor );
-//    }
+
   }
   
   
