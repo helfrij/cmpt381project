@@ -32,6 +32,10 @@ public class LineShape extends AbstractLineShape {
     
     if (pointCount >= 2) {
       endPoint = points.get(pointCount - 1);
+      
+      print("Start : " + startPoint.getX() + ", " + startPoint.getY() + "\n");
+      print("End : " + endPoint.getX() + ", " + endPoint.getY() + "\n");
+      
       float slope = 0.0;
       float lineY = 0.0;
       
@@ -39,23 +43,27 @@ public class LineShape extends AbstractLineShape {
       if (startPoint.getX() <= endPoint.getX()) {
         if (x >= startPoint.getX() && x <= endPoint.getX()) {
           slope = (endPoint.getY() - startPoint.getY()) / (endPoint.getX() - startPoint.getX());
-          lineY = startPoint.getY() + slope * x;
+          lineY = startPoint.getY() + slope * (x - startPoint.getX());
         }
+        
       } else if (startPoint.getX() > endPoint.getX()) {
         if (x <= startPoint.getX() && x >= endPoint.getX()) {
           slope = (startPoint.getY() - endPoint.getY()) / (startPoint.getX() - endPoint.getX());
-          lineY = endPoint.getY() + slope * x;
+          lineY = endPoint.getY() + slope * (x - endPoint.getY());
         }
+        
       } else {
         return false;
       }
       
-      // next, identify the y value of the line at the given x.
-      print(lineY + "\n");
-      print(y + "\n\n");
+      print("Slope : " + slope + "\n");
+      print("Hover : " + x + ", " + y + "\n");
+      print("Cursor : " + mouseX + ", " + mouseY + "\n");
+      print("Line Y : " + lineY + "\n\n\n");
+//      print("Line difference : " + (mouseX - x) + ", " + (mouseY - lineY) + "\n\n\n");
       
       // if the given y value is within clickBuffer amount of the line y, the line has been hit!
-      if (y + clickBuffer > lineY && y - clickBuffer < lineY) {
+      if (y > lineY - clickBuffer && y < lineY + clickBuffer) {
         return true;
       }
     }
