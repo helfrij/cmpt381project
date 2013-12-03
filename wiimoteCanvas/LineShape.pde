@@ -1,17 +1,11 @@
 public class LineShape extends AbstractLineShape {
   
   private ArrayList<Point> points;
-//  private int clickBuffer;
-  private float minX, maxX, minY, maxY;
+  private Point startPoint;
+  private Point endPoint;
     
   public LineShape() {
     points = new ArrayList<Point>();
-//    clickBuffer = 15;
-    
-    minX = 0;
-    maxX = 0;
-    minY = 0;
-    maxY = 0;
     
     lineWidth = 2;
     lineColor = color(0, 0, 0);
@@ -23,30 +17,41 @@ public class LineShape extends AbstractLineShape {
   
   
   public void addPoint(float xPos, float yPos) {
-    points.add(new Point(xPos, yPos));
-    
-    if (xPos < minX) {
-      minX = xPos; 
-    }
-    
-    if (xPos > maxX) {
-      maxX = xPos; 
-    }
-    
-    if (yPos < minY) {
-      minY = yPos; 
-    }
-    
-    if (yPos > maxY) {
-      maxY = yPos; 
+    if (points.size() == 0) {
+      startPoint = new Point(xPos, yPos);
+      points.add(startPoint);
+      
+    } else {
+      points.add(new Point(xPos, yPos));
     }
   }
   
   
   public boolean checkHit(float x, float y) {
+    int pointCount = points.size();
+    
+    if (pointCount >= 2) {
+      endPoint = points.get(pointCount - 1);
+      float slope = 0.0;
       
-    if (x < (maxX + clickBuffer) && x > (minX - clickBuffer)) {
-      if (y < (maxY + clickBuffer) && y > (maxY - clickBuffer)) {
+      // first, find out if x is between the startPoint and endPoint x values.
+      if (startPoint.getX() <= endPoint.getX()) {
+        if (x >= startPoint.getX() && x <= endPoint.getX()) {
+          slope = (endPoint.getY() - startPoint.getY()) / (endPoint.getX() - startPoint.getX());
+        }
+      } else if (startPoint.getX() > endPoint.getX()) {
+        if (x <= startPoint.getX() && x >= endPoint.getX()) {
+          slope = (startPoint.getY() - endPoint.getY()) / (startPoint.getX() - endPoint.getX());
+        }
+      } else {
+        return false;
+      }
+      
+      // next, identify the y value of the line at the given x.
+      float lineY = slope * x + startPoint.getY();
+      
+      // if the given y value is within clickBuffer amount of the line y, the line has been hit!
+      if (y <= lineY + clickBuffer && y >= lineY - clickBuffer) {
         return true;
       }
     }

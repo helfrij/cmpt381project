@@ -74,6 +74,15 @@ public class CanvasModel {
   }
   
   
+  public void clearSelection() {
+    for(AbstractShape shape : selectedShapes) {
+      shape.setSelected(false);
+    }
+    
+    selectedShapes.clear();
+  }
+  
+  
   private void addShapeToCanvas(AbstractShape newShape) {
     if (newShape != null && !canvasContents.contains(drawingShape)) {
       canvasContents.add(newShape);
@@ -86,16 +95,17 @@ public class CanvasModel {
       shape.hideShape(); 
     }
     
-    clearSelectedShapes();
+    clearSelection();
   }
   
   
-  private void clearSelectedShapes() {
-    for (AbstractShape shape : selectedShapes) {
-      shape.setSelected(false);
+  private void clearCanvas() {
+    for (AbstractShape shape : canvasContents) {
+      shape.hideShape();
     }
     
-    selectedShapes.clear();
+    clearSelection();
+    canvasContents.clear();
   }
   
   
@@ -105,7 +115,7 @@ public class CanvasModel {
 //      color lineColor = color(colours[colorIndex][0], colours[colorIndex][1], colours[colorIndex][2]);
 //      drawingShape.setLineColor(lineColor);
       
-      clearSelectedShapes();
+      clearSelection();
       selectedShapes.add(drawingShape); 
     }
   }
@@ -153,7 +163,7 @@ public class CanvasModel {
   
   
   public void clickCheck(float xPos, float yPos) {
-    clearSelectedShapes();
+    clearSelection();
     
     // if a part of empty canvas was clicked, then we begin creating a new shape.
     if (canvasHit(xPos, yPos)) {
@@ -239,11 +249,10 @@ public class CanvasModel {
   }
   
   
-  public void saveDrawing() {
-//    AbstractToolbar selectedToolbar;
-//    selectedToolbar.hideToolbar();
+  public void saveCanvas() {
+    hideToolbars();
+    toolbarIndex = 0;
     save("canvas.jpg");
-//    setSelectedToolbar(selectedToolbar);
   }
   
   

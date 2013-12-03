@@ -47,12 +47,6 @@ void setup() {
 }
 
 
-public void saveCanvas() {
-  model.hideToolbars();
-  model.saveDrawing();
-}
-
-
 
 // View /////////////////////////////
 
@@ -156,7 +150,13 @@ void keyPressed() {
 //    model.increaseB();
     
   } else if ('s' == key) {
-    saveCanvas();
+    model.saveCanvas();
+    
+  } else if ('d' == key) {
+    model.deleteSelectedShapes();
+    
+  } else if ('f' == key) {
+    model.clearCanvas();
   }
 }
 
