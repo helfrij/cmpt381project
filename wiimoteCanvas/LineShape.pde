@@ -13,6 +13,7 @@ public class LineShape extends AbstractLineShape {
     isDrawn = true;
     isHoverSelected = false;
     rotationAngle = 0;
+    scale = 1.0;
   }
   
   
@@ -27,14 +28,107 @@ public class LineShape extends AbstractLineShape {
   }
   
   
+  public float getMinX() {
+    int pointsNum = points.size();
+    float minX = points.get(0).getX();
+    
+    for (int index = 1; index < pointsNum; index++) {
+      float newX = points.get(index).getX();
+      if (newX < minX) {
+        minX = newX;
+      }
+    }
+    
+    return minX;
+  }
+  
+  
+  public float getMaxX() {
+    int pointsNum = points.size();
+    float maxX = points.get(0).getX();
+    
+    for (int index = 1; index < pointsNum; index++) {
+      float newX = points.get(index).getX();
+      if (newX > maxX) {
+        maxX = newX;
+      }
+    }
+    
+    return maxX;
+  }
+  
+  
+  public float getMinY() {
+    int pointsNum = points.size();
+    float minY = points.get(0).getY();
+    
+    for (int index = 1; index < pointsNum; index++) {
+      float newY = points.get(index).getY();
+      if (newY < minY) {
+        minY = newY;
+      }
+    }
+    
+    return minY;
+  }
+  
+  
+  public float getMaxY() {
+    int pointsNum = points.size();
+    float maxY = points.get(0).getY();
+    
+    for (int index = 1; index < pointsNum; index++) {
+      float newY = points.get(index).getY();
+      if (newY > maxY) {
+        maxY = newY;
+      }
+    }
+    
+    return maxY;
+  }
+  
+  
+  public float getShapeCenterX() {
+    float minX = getMinX();
+    float maxX = getMaxX();
+    float centerX = (minX + maxX) / 2;
+    
+    return centerX;
+  }
+  
+  
+  public float getShapeCenterY() {
+    float minY = getMinY();
+    float maxY = getMaxY();
+    float centerY = (minY + maxY) / 2;
+    
+    return centerY;
+  }
+  
+  
+  public void translateX(float dx) {
+    for (Point point : points) {
+      float oldX = point.getX();
+      float newX = oldX + dx;
+      point.setX(newX);
+    }
+  }
+  
+  
+  public void translateY(float dy) {
+    for (Point point : points) {
+      float oldY = point.getY();
+      float newY = oldY + dy;
+      point.setY(newY);
+    }
+  }
+  
+  
   public boolean checkHit(float x, float y) {
     int pointCount = points.size();
     
     if (pointCount >= 2) {
       endPoint = points.get(pointCount - 1);
-      
-      print("Start : " + startPoint.getX() + ", " + startPoint.getY() + "\n");
-      print("End : " + endPoint.getX() + ", " + endPoint.getY() + "\n");
       
       float slope = 0.0;
       float lineY = 0.0;
@@ -56,12 +150,6 @@ public class LineShape extends AbstractLineShape {
         return false;
       }
       
-      print("Slope : " + slope + "\n");
-      print("Hover : " + x + ", " + y + "\n");
-      print("Cursor : " + mouseX + ", " + mouseY + "\n");
-      print("Line Y : " + lineY + "\n\n\n");
-//      print("Line difference : " + (mouseX - x) + ", " + (mouseY - lineY) + "\n\n\n");
-      
       // if the given y value is within clickBuffer amount of the line y, the line has been hit!
       if (y > lineY - clickBuffer && y < lineY + clickBuffer) {
         return true;
@@ -69,11 +157,6 @@ public class LineShape extends AbstractLineShape {
     }
     
     return false;
-  }
-  
-  
-  public void setRotationAngle(float newAngle) {
-
   }
   
   
@@ -87,16 +170,26 @@ public class LineShape extends AbstractLineShape {
         Point endPoint = points.get(pointCount - 1);
       
         if (isSelected || isHoverSelected) {
+          pushMatrix();
+          translate(getShapeCenterX(), getShapeCenterY());
+          rotate(getRotationAngle());
+          scale(getScale());
           fill(255);
           stroke(255);
           strokeWeight(lineWidth + 10);
-          line(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+          line(-getShapeCenterX() + startPoint.getX(), -getShapeCenterY() + startPoint.getY(), -getShapeCenterX() + endPoint.getX(), -getShapeCenterY() + endPoint.getY());
+          popMatrix();
         }
 
+        pushMatrix();
+        translate(getShapeCenterX(), getShapeCenterY());
+        rotate(getRotationAngle());
+        scale(getScale());
         fill(lineColor);
         stroke(lineColor);
         strokeWeight(lineWidth);
-        line(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        line(-getShapeCenterX() + startPoint.getX(), -getShapeCenterY() + startPoint.getY(), -getShapeCenterX() + endPoint.getX(), -getShapeCenterY() + endPoint.getY());
+        popMatrix();
       }
     }
   }

@@ -173,15 +173,43 @@ public class CanvasModel {
   }
   
   
+  public void scaleUpSelection() {
+    for (AbstractShape shape : selectedShapes) {
+      float scale = shape.getScale();
+      shape.setScale(scale + 0.1);
+    }
+  }
+  
+  
+  public void scaleDownSelection() {
+    for (AbstractShape shape : selectedShapes) {
+      float scale = shape.getScale();
+      shape.setScale(scale - 0.1);
+    }
+  }
+  
+  
+  public void rotateSelection(float dAngle) {
+    for (AbstractShape shape : selectedShapes) {
+      float oldAngle = shape.getRotationAngle();
+      float newAngle = oldAngle + dAngle;
+      shape.setRotationAngle(newAngle);
+    }
+  }
+  
+  
   public void clickCheck(float xPos, float yPos) {    
     // if a part of empty canvas was clicked, then we begin creating a new shape.
     if (canvasHit(xPos, yPos)) {
+      
+      clearSelection();
       AbstractShape newShape = mainToolbar.createNewShape();
       setDrawingShape(newShape);
       
     // if one of the toolbars was hit, forward the "clickCheck" to whichever toolbar was hit.
     } else if (toolbarHit(xPos, yPos)) {
       
+      clearSelection();
       for (AbstractToolbar toolbar : toolbars) {
         toolbar.clickCheck(xPos, yPos);
       }

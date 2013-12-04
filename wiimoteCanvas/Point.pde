@@ -13,8 +13,18 @@ public class Point {
   }
   
   
+  public void setX(float newX) {
+    x = newX;
+  }
+  
+  
   public float getY() {
     return y;
+  }
+  
+  
+  public void setY(float newY) {
+    y = newY;
   }
   
 }

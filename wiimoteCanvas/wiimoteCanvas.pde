@@ -161,6 +161,18 @@ void keyPressed() {
     
   } else if (SHIFT == keyCode) {
     model.setShiftPressed(true);
+    
+  } else if ('g' == key) {
+    model.scaleUpSelection();
+    
+  } else if ('h' == key) {
+    model.scaleDownSelection();
+    
+  } else if ('t' == key) {
+    model.rotateSelection(radians(30));
+    
+  } else if ('y' == key) {
+    model.rotateSelection(radians(-30));
   }
 }
 
