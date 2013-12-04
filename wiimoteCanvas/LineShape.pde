@@ -159,7 +159,7 @@ public class LineShape extends AbstractLineShape {
       } else if (startPoint.getX() > endPoint.getX()) {
         if (x <= startPoint.getX() && x >= endPoint.getX()) {
           slope = (startPoint.getY() - endPoint.getY()) / (startPoint.getX() - endPoint.getX());
-          lineY = endPoint.getY() + slope * (x - endPoint.getY());
+          lineY = endPoint.getY() + slope * (x - endPoint.getX());
         }
         
       } else {
