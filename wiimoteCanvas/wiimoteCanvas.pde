@@ -58,7 +58,7 @@ void draw() {
   // set the canvas background to grey.
   background(220);
   
-  // draw shapes.
+  // draw shapes and selection box, if valid.
   model.drawShapes();
   
   // draw toolbars.
@@ -160,7 +160,7 @@ void keyPressed() {
     model.clearCanvas();
     
   } else if (SHIFT == keyCode) {
-    model.setShiftPressed(true);
+    model.setShiftPressed(true); // used for multiple and lasso selection
     
   } else if ('g' == key) {
     model.scaleUpSelection();
@@ -174,5 +174,11 @@ void keyPressed() {
   } else if ('y' == key) {
     model.rotateSelection(radians(-30));
   }
+  
+}
+
+
+void keyReleased() {
+  model.setShiftPressed(false);
 }
 

@@ -15,7 +15,7 @@ public class CanvasModel {
   private int lineWidth;
   private boolean shiftPressed;
 
-  
+  private SelectionBox lassoSelection;
   
   public CanvasModel(int w, int h) {
     canvasWidth = w;
@@ -38,6 +38,32 @@ public class CanvasModel {
     drawingShape = null;
 
     lineWidth = 1;
+    shiftPressed = false;
+    
+    lassoSelection = null;
+  }
+  
+  
+  public void startSelectionBox(float startX, float startY) {
+    lassoSelection = new SelectionBox(startX, startY);
+    lassoSelection.hide();
+  }
+  
+  
+  public void drawSelectionBox() {
+    if (lassoSelection != null) {
+      lassoSelection.show();
+      lassoSelection.drawSelectionBox();
+    }
+  }
+  
+  
+  public void hideSelectionBox() {
+    if (lassoSelection != null) {
+      lassoSelection.hide();
+    }
+    
+    lassoSelection = null;
   }
   
   
@@ -136,13 +162,18 @@ public class CanvasModel {
   
   
   public void drawShapes() {
+    // draw the shapes that have been created and saved thus far.
     for(AbstractShape shape : canvasContents) {
       shape.drawShape();
     }
     
+    // if we are in the middle of drawing a shape, draw what we have.
     if (drawingShape != null) {
       drawingShape.drawShape(); 
     }
+    
+    // if we are making a lasso selection, draw the selection box too!
+    drawSelectionBox();
   }
   
   
@@ -199,12 +230,16 @@ public class CanvasModel {
   
   
   public void clickCheck(float xPos, float yPos) {    
-    // if a part of empty canvas was clicked, then we begin creating a new shape.
+    // if a part of empty canvas was clicked, then we begin lasso selection OR creating a new shape.
     if (canvasHit(xPos, yPos)) {
-      
-      clearSelection();
-      AbstractShape newShape = mainToolbar.createNewShape();
-      setDrawingShape(newShape);
+      if (shiftPressed) {
+        startSelectionBox(xPos, yPos);
+        
+      } else {
+        clearSelection();
+        AbstractShape newShape = mainToolbar.createNewShape();
+        setDrawingShape(newShape);
+      }
       
     // if one of the toolbars was hit, forward the "clickCheck" to whichever toolbar was hit.
     } else if (toolbarHit(xPos, yPos)) {
@@ -268,6 +303,12 @@ public class CanvasModel {
     for (AbstractToolbar toolbar : toolbars) {
       toolbar.dragCheck(cursorX, cursorY);
     } 
+    
+    // else we are in the middle of a lasso selection!
+    if (shiftPressed() && lassoSelection != null) {
+      lassoSelection.updateEndpoint(cursorX, cursorY);
+//      lassoSelection.drawSelectionBox();
+    }
   }
   
   
@@ -277,6 +318,16 @@ public class CanvasModel {
     for (AbstractToolbar toolbar : toolbars) {
       toolbar.release(lastX, lastY);
     }
+    
+    if (lassoSelection != null) {
+      for (AbstractShape shape : canvasContents) {
+        if (lassoSelection.containsX(shape.getShapeCenterX()) && lassoSelection.containsY(shape.getShapeCenterY())) {
+          addShapeToSelection(shape);
+        }
+      }
+    }
+    
+    hideSelectionBox();
   }
   
   

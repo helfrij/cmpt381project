@@ -30,12 +30,16 @@ public class LineShape extends AbstractLineShape {
   
   public float getMinX() {
     int pointsNum = points.size();
-    float minX = points.get(0).getX();
+    float minX = 0.0;
     
-    for (int index = 1; index < pointsNum; index++) {
-      float newX = points.get(index).getX();
-      if (newX < minX) {
-        minX = newX;
+    if (pointsNum > 0) {
+      minX = points.get(0).getX();
+      
+      for (int index = 1; index < pointsNum; index++) {
+        float newX = points.get(index).getX();
+        if (newX < minX) {
+          minX = newX;
+        }
       }
     }
     
@@ -45,12 +49,16 @@ public class LineShape extends AbstractLineShape {
   
   public float getMaxX() {
     int pointsNum = points.size();
-    float maxX = points.get(0).getX();
+    float maxX = 0.0;
     
-    for (int index = 1; index < pointsNum; index++) {
-      float newX = points.get(index).getX();
-      if (newX > maxX) {
-        maxX = newX;
+    if (pointsNum > 0) {
+      maxX = points.get(0).getX();
+      
+      for (int index = 1; index < pointsNum; index++) {
+        float newX = points.get(index).getX();
+        if (newX > maxX) {
+          maxX = newX;
+        }
       }
     }
     
@@ -60,12 +68,16 @@ public class LineShape extends AbstractLineShape {
   
   public float getMinY() {
     int pointsNum = points.size();
-    float minY = points.get(0).getY();
+    float minY = 0.0;
     
-    for (int index = 1; index < pointsNum; index++) {
-      float newY = points.get(index).getY();
-      if (newY < minY) {
-        minY = newY;
+    if (pointsNum > 0) {
+      minY = points.get(0).getY();
+      
+      for (int index = 1; index < pointsNum; index++) {
+        float newY = points.get(index).getY();
+        if (newY < minY) {
+          minY = newY;
+        }
       }
     }
     
@@ -75,12 +87,16 @@ public class LineShape extends AbstractLineShape {
   
   public float getMaxY() {
     int pointsNum = points.size();
-    float maxY = points.get(0).getY();
+    float maxY = 0.0;
     
-    for (int index = 1; index < pointsNum; index++) {
-      float newY = points.get(index).getY();
-      if (newY > maxY) {
-        maxY = newY;
+    if (pointsNum > 0) {
+      maxY = points.get(0).getY();
+      
+      for (int index = 1; index < pointsNum; index++) {
+        float newY = points.get(index).getY();
+        if (newY > maxY) {
+          maxY = newY;
+        }
       }
     }
     
