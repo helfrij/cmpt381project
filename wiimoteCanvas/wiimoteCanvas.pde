@@ -121,6 +121,7 @@ void mouseDragged() {
 
 
 void keyPressed() {
+  model.setShiftPressed(false);
   
   if ( ' ' == key) {
     model.switchToolbar();
@@ -157,6 +158,9 @@ void keyPressed() {
     
   } else if ('f' == key) {
     model.clearCanvas();
+    
+  } else if (SHIFT == keyCode) {
+    model.setShiftPressed(true);
   }
 }
 

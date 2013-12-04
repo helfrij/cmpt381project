@@ -13,6 +13,7 @@ public class CanvasModel {
   
   private int canvasWidth, canvasHeight;
   private int lineWidth;
+  private boolean shiftPressed;
 
   
   
@@ -162,9 +163,17 @@ public class CanvasModel {
   }
   
   
-  public void clickCheck(float xPos, float yPos) {
-    clearSelection();
-    
+  public void setShiftPressed(boolean isPressed) {
+    shiftPressed = isPressed;
+  }
+  
+  
+  public boolean shiftPressed() {
+    return shiftPressed;
+  }
+  
+  
+  public void clickCheck(float xPos, float yPos) {    
     // if a part of empty canvas was clicked, then we begin creating a new shape.
     if (canvasHit(xPos, yPos)) {
       AbstractShape newShape = mainToolbar.createNewShape();
@@ -177,8 +186,12 @@ public class CanvasModel {
         toolbar.clickCheck(xPos, yPos);
       }
       
-    // if one of the shapes drawn on the canvas was hit, set that shape as the selected shape.
+    // if one of the shapes drawn on the canvas was hit, add that shape to selection.
     } else if (shapeHit(xPos, yPos)) {
+      
+      if (!shiftPressed()) {
+        clearSelection();
+      }
       
       for (AbstractShape shape : canvasContents) {
         if (shape.checkHit(xPos, yPos)) {
