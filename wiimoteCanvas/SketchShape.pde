@@ -113,6 +113,16 @@ public class SketchShape extends AbstractLineShape {
   }
   
   
+  public void translateX(float dx) {
+    
+  }
+  
+  
+  public void translateY(float dy) {
+    
+  }
+  
+  
   public boolean checkHit(float x, float y) {
     for (Point point : points) {
       float pointX = point.getX();

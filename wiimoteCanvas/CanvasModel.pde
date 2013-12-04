@@ -14,6 +14,7 @@ public class CanvasModel {
   private int canvasWidth, canvasHeight;
   private int lineWidth;
   private boolean shiftPressed;
+  private boolean selectedPressed;
 
   private SelectionBox lassoSelection;
   
@@ -39,6 +40,7 @@ public class CanvasModel {
 
     lineWidth = 1;
     shiftPressed = false;
+    selectedPressed = true;
     
     lassoSelection = null;
   }
@@ -64,6 +66,16 @@ public class CanvasModel {
     }
     
     lassoSelection = null;
+  }
+  
+  
+  public void setSelectedPressed(boolean isPressed) {
+    selectedPressed = isPressed;
+  }
+  
+  
+  public boolean selectedPressed() {
+    return selectedPressed;
   }
   
   
@@ -261,6 +273,8 @@ public class CanvasModel {
           addShapeToSelection(shape);
         }
       }
+      
+      setSelectedPressed(true);
     }
 
   }
@@ -304,6 +318,14 @@ public class CanvasModel {
       toolbar.dragCheck(cursorX, cursorY);
     } 
     
+    // if mouseDown happened on a selected shape, we can drag the selection around on the canvas.
+    if (selectedPressed()) {
+      for (AbstractShape shape : selectedShapes) {
+        shape.translateX(cursorX - shape.getShapeCenterX());
+        shape.translateY(cursorY - shape.getShapeCenterY());
+      }
+    }
+    
     // else we are in the middle of a lasso selection!
     if (shiftPressed() && lassoSelection != null) {
       lassoSelection.updateEndpoint(cursorX, cursorY);
@@ -328,6 +350,7 @@ public class CanvasModel {
     }
     
     hideSelectionBox();
+    setSelectedPressed(false);
   }
   
   

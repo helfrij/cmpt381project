@@ -22,6 +22,8 @@ abstract class AbstractShape {
   public abstract float getMaxY();
   public abstract float getShapeCenterX();
   public abstract float getShapeCenterY();
+  public abstract void translateX(float dx);
+  public abstract void translateY(float dy);
   
   
   public boolean isSelected() {
