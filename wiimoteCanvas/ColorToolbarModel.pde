@@ -5,9 +5,11 @@ public class ColorToolbarModel extends AbstractToolbarModel {
   
   public float initX, initY;
   
-  int colorIndex;
+  int shapeColorIndex;
+  int canvasColorIndex;
   int rVal, gVal, bVal;
   int[][] colours;
+  int[][] canvasColors;
   
   public ColorToolbarModel(int w, int h) {
     canvasWidth = w;
@@ -45,7 +47,9 @@ public class ColorToolbarModel extends AbstractToolbarModel {
     int[] indigo = {75, 0, 130}; 
     int[] violet = {148, 0, 211};
     
-    colorIndex = 0;
+    shapeColorIndex = 0;
+    canvasColorIndex = 0;
+    
     colours = new int[8][3];
     colours[0] = black;
     colours[1] = red;
@@ -55,6 +59,27 @@ public class ColorToolbarModel extends AbstractToolbarModel {
     colours[5] = blue;
     colours[6] = indigo;
     colours[7] = violet;  
+    
+    int[] grey = {220, 220, 220};
+    int[] white = {255, 255, 255};
+    int[] pink = {255, 182, 193};
+    int[] thistle = {255, 225, 255};
+    int[] lavender = {230, 230, 250};
+    int[] lightBlue = {191, 239, 255};
+    int[] lightGreen = {193, 255, 193};
+    int[] lightYellow = {238, 238, 209};
+    
+    canvasColors = new int[8][3];
+    canvasColors[0] = grey;
+    canvasColors[1] = white;
+    canvasColors[2] = pink;
+    canvasColors[3] = thistle;
+    canvasColors[4] = lavender;
+    canvasColors[5] = lightBlue;
+    canvasColors[6] = lightGreen;
+    canvasColors[7] = lightYellow;
+    
+    
   }
   
   
@@ -112,27 +137,27 @@ public class ColorToolbarModel extends AbstractToolbarModel {
   
   
   public void iconHoverCheck(float cursorX, float cursorY) {
-    
+    // intentionally blank.
   }
   
   
   public void pressCheck(float pressX, float pressY) {
-    
+    // intentionally blank.
   }
   
   
   public void clickCheck(float clickX, float clickY) {
-    
+    // intentionally blank.
   }
   
   
   public void dragCheck(float dragX, float dragY) {
-    
+    // intentionally blank.
   }
   
   
   public void release(float lastX, float lastY) {
-    
+   // intentionally blank. 
   }
   
   
@@ -147,24 +172,41 @@ public class ColorToolbarModel extends AbstractToolbarModel {
   
   
   public void setSelectedTool(AbstractTool tool) {
-    
+    // intentionally blank.
   }
   
   public color switchLineColor() {
-    colorIndex++;
+    shapeColorIndex++;
     
-    if (colorIndex > colours.length - 1) {
-      colorIndex = 0;
+    if (shapeColorIndex > colours.length - 1) {
+      shapeColorIndex = 0;
     }
     
-    rVal = colours[colorIndex][0];
-    gVal = colours[colorIndex][1];
-    bVal = colours[colorIndex][2];
+    rVal = colours[shapeColorIndex][0];
+    gVal = colours[shapeColorIndex][1];
+    bVal = colours[shapeColorIndex][2];
     
     color newColor = color(rVal, gVal, bVal);
     
     return newColor;
 
+  }
+  
+  
+  public color switchCanvasColor() {
+    canvasColorIndex++;
+    
+    if (canvasColorIndex > canvasColors.length - 1) {
+      canvasColorIndex = 0;
+    }
+    
+    rVal = canvasColors[canvasColorIndex][0];
+    gVal = canvasColors[canvasColorIndex][1];
+    bVal = canvasColors[canvasColorIndex][2];
+    
+    color newColor = color(rVal, gVal, bVal);
+    
+    return newColor;
   }
   
   

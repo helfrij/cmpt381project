@@ -4,7 +4,7 @@ private int cursorX, cursorY;
 private color cursorColor;
 
 private int canvasH, canvasW;
-
+private color canvasColor;
 
 private WiiRemoteJ deviceFinder;
 private WiiRemote remote;
@@ -43,6 +43,8 @@ void setup() {
   
   // set up the model, stores the shapes drawn on the canvas and toolbars.
   model = new CanvasModel(canvasW, canvasH);
+  
+  canvasColor = color(220);
 
 }
 
@@ -56,7 +58,8 @@ void draw() {
   cursorRadius = cursorRadius + sin( frameCount / 4 );
   
   // set the canvas background to grey.
-  background(220);
+//  background(220);
+  background(canvasColor);
   
   // draw shapes and selection box, if valid.
   model.drawShapes();
@@ -173,6 +176,9 @@ void keyPressed() {
     
   } else if ('y' == key) {
     model.rotateSelection(radians(-30));
+    
+  } else if ('q' == key) {
+    canvasColor = model.switchCanvasColor();
   }
   
 }

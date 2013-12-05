@@ -97,4 +97,9 @@ public class ColorToolbar extends AbstractToolbar {
     return toolbarModel.switchLineColor();
   }
   
+  
+  public color switchCanvasColor() {
+    return toolbarModel.switchCanvasColor();
+  }
+  
 }

@@ -16,10 +16,12 @@ public class CanvasModel {
   private boolean shiftPressed;
   private boolean selectedPressed;
   
+  private int bgColorIndex;
+  
   private float mouseDownX;
   private float mouseDownY;
 
-  private SelectionBox lassoSelection;
+  private SelectionBox lassoSelection; // maybe we need to implement a separate selection model?
   
   public CanvasModel(int w, int h) {
     canvasWidth = w;
@@ -46,6 +48,8 @@ public class CanvasModel {
     selectedPressed = true;
     
     lassoSelection = null;
+    
+    bgColorIndex = 0;
     
     mouseDownX = 0.0;
     mouseDownY = 0.0;
@@ -428,6 +432,11 @@ public class CanvasModel {
     if (toolbarIndex < toolbars.size()) {
       toolbars.get(toolbarIndex).showToolbar();
     }
+  }
+  
+  
+  public color switchCanvasColor() {
+    return colorToolbar.switchCanvasColor();
   }
   
 }
