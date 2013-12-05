@@ -114,12 +114,20 @@ public class SketchShape extends AbstractLineShape {
   
   
   public void translateX(float dx) {
-    
+    for (Point point : points) {
+      float oldX = point.getX();
+      float newX = oldX + dx;
+      point.setX(newX);
+    }
   }
   
   
   public void translateY(float dy) {
-    
+    for (Point point : points) {
+      float oldY = point.getY();
+      float newY = oldY + dy;
+      point.setY(newY);
+    }
   }
   
   

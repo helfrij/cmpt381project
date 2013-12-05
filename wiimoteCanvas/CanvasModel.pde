@@ -15,6 +15,9 @@ public class CanvasModel {
   private int lineWidth;
   private boolean shiftPressed;
   private boolean selectedPressed;
+  
+  private float mouseDownX;
+  private float mouseDownY;
 
   private SelectionBox lassoSelection;
   
@@ -43,6 +46,9 @@ public class CanvasModel {
     selectedPressed = true;
     
     lassoSelection = null;
+    
+    mouseDownX = 0.0;
+    mouseDownY = 0.0;
   }
   
   
@@ -106,7 +112,7 @@ public class CanvasModel {
   
 
   private void addShapeToSelection(AbstractShape shape) {
-    if (shape != null) {
+    if (shape != null && !selectedShapes.contains(shape)) {
       shape.setSelected(true);
       selectedShapes.add(shape); 
     }
@@ -242,9 +248,11 @@ public class CanvasModel {
   
   
   public void clickCheck(float xPos, float yPos) {    
+
     // if a part of empty canvas was clicked, then we begin lasso selection OR creating a new shape.
     if (canvasHit(xPos, yPos)) {
       if (shiftPressed) {
+        clearSelection();
         startSelectionBox(xPos, yPos);
         
       } else {
@@ -264,19 +272,25 @@ public class CanvasModel {
     // if one of the shapes drawn on the canvas was hit, add that shape to selection.
     } else if (shapeHit(xPos, yPos)) {
       
-      if (!shiftPressed()) {
-        clearSelection();
-      }
-      
       for (AbstractShape shape : canvasContents) {
         if (shape.checkHit(xPos, yPos)) {
+          
+          // if we're pressing on an already selected shape, this is the signal to start moving shapes around.
+          if (shape.isSelected()) {
+            setSelectedPressed(true);
+            mouseDownX = xPos;
+            mouseDownY = yPos;
+          }
+          
+          // if we just clicked on a random shape, clear old selection. this will be the new selection.
+          if (!shiftPressed() && !selectedPressed()) {
+            clearSelection();
+          }
+          
           addShapeToSelection(shape);
         }
       }
-      
-      setSelectedPressed(true);
     }
-
   }
   
   
@@ -312,35 +326,39 @@ public class CanvasModel {
     // if we are drawing on the canvas, the drawing shape will not be null. Add new points to the shape.
     drawShape(cursorX, cursorY);
       
-    // else, we could be dragging a toolbar around. Forward the call to the toolbars to handle it themselves.
-    
+    // we could be dragging a toolbar around. Forward the call to the toolbars to handle it themselves.
     for (AbstractToolbar toolbar : toolbars) {
       toolbar.dragCheck(cursorX, cursorY);
     } 
     
-    // if mouseDown happened on a selected shape, we can drag the selection around on the canvas.
+    // if mouseDown happened on a selected shape(s), we can drag the selection around on the canvas.
     if (selectedPressed()) {
       for (AbstractShape shape : selectedShapes) {
-        shape.translateX(cursorX - shape.getShapeCenterX());
-        shape.translateY(cursorY - shape.getShapeCenterY());
+        shape.translateX(cursorX - mouseDownX);
+        shape.translateY(cursorY - mouseDownY);
       }
+      
+      mouseDownX = cursorX;
+      mouseDownY = cursorY;
     }
     
-    // else we are in the middle of a lasso selection!
+    // else we could be in the middle of a lasso selection!
     if (shiftPressed() && lassoSelection != null) {
       lassoSelection.updateEndpoint(cursorX, cursorY);
-//      lassoSelection.drawSelectionBox();
     }
   }
   
   
   public void release(float lastX, float lastY) {
+    // if we've been drawing a new shape, the drawing is now complete. Add drawing to list of canvas items.
     addDrawingToCanvas();
     
+    // if we've been dragging around a toolbar, let the toolbar release itself!
     for (AbstractToolbar toolbar : toolbars) {
       toolbar.release(lastX, lastY);
     }
     
+    // if we've been dragging the cursor to form a selection box, the box is now complete. All interior shapes should now be selected.
     if (lassoSelection != null) {
       for (AbstractShape shape : canvasContents) {
         if (lassoSelection.containsX(shape.getShapeCenterX()) && lassoSelection.containsY(shape.getShapeCenterY())) {
@@ -350,6 +368,10 @@ public class CanvasModel {
     }
     
     hideSelectionBox();
+    
+    // if we've been dragging around a selected shape(s) on the canvas, time to restore defaults.
+    mouseDownX = 0.0;
+    mouseDownY = 0.0;
     setSelectedPressed(false);
   }
   
