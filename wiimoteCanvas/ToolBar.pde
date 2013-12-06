@@ -5,11 +5,6 @@ public class ToolBar extends AbstractToolbar {
   private float xOffset = 0.0;
   private float yOffset = 0.0;
   
-//  private int selectedWeight, deselectedWeight;
-  
-//  private boolean isSelected;
-//  private boolean isMoving;
-  
   private ToolBarModel toolsModel;
   
   public ToolBar(int canvasWidth, int canvasHeight) {

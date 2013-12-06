@@ -22,6 +22,15 @@ public class SelectionBox {
   }
   
   
+  public void setStartPoint(float startX, float startY) {
+    startPoint.setX(startX);
+    startPoint.setY(startY);
+    
+    endPoint.setX(startX);
+    endPoint.setY(startY);
+  }
+  
+  
   public boolean containsX(float xVal) {
     if (startPoint.getX() < endPoint.getX()) {
       if (xVal > startPoint.getX() && xVal < endPoint.getX()) {
