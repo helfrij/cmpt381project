@@ -35,12 +35,12 @@ public class ColorToolbar extends AbstractToolbar {
   
   
   public void hideToolbar() {
-    
+    isShown = false;
   }
   
   
   public void showToolbar() {
-    
+//    isShown = true;
   }
   
   
@@ -96,6 +96,11 @@ public class ColorToolbar extends AbstractToolbar {
   public color switchLineColor() {
     return toolbarModel.switchLineColor();
   }
+  
+  
+//  public color getCanvasColor() {
+////    return toolbarModel.getCanvasColor();
+//  }
   
   
   public color switchCanvasColor() {

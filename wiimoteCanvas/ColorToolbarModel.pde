@@ -5,10 +5,12 @@ public class ColorToolbarModel extends AbstractToolbarModel {
   
   public float initX, initY;
   
+  public boolean crazyOn;
+  
   int shapeColorIndex;
   int canvasColorIndex;
   int rVal, gVal, bVal;
-  int[][] colours;
+  int[][] colors;
   int[][] canvasColors;
   
   public ColorToolbarModel(int w, int h) {
@@ -28,6 +30,8 @@ public class ColorToolbarModel extends AbstractToolbarModel {
     toolbarX = canvasW - 10 - toolbarW;
     toolbarY = canvasH/2 - toolbarH/2;
 
+    crazyOn = false;
+    
     xOffset = 0.0;
     yOffset = 0.0;
     
@@ -50,15 +54,15 @@ public class ColorToolbarModel extends AbstractToolbarModel {
     shapeColorIndex = 0;
     canvasColorIndex = 0;
     
-    colours = new int[8][3];
-    colours[0] = black;
-    colours[1] = red;
-    colours[2] = orange;
-    colours[3] = yellow;
-    colours[4] = green;
-    colours[5] = blue;
-    colours[6] = indigo;
-    colours[7] = violet;  
+    colors = new int[8][3];
+    colors[0] = black;
+    colors[1] = red;
+    colors[2] = orange;
+    colors[3] = yellow;
+    colors[4] = green;
+    colors[5] = blue;
+    colors[6] = indigo;
+    colors[7] = violet;  
     
     int[] grey = {220, 220, 220};
     int[] white = {255, 255, 255};
@@ -175,22 +179,31 @@ public class ColorToolbarModel extends AbstractToolbarModel {
     // intentionally blank.
   }
   
+  public void setCrazyOn(boolean isCrazy) {
+    crazyOn = isCrazy;
+  }
+  
   public color switchLineColor() {
     shapeColorIndex++;
     
-    if (shapeColorIndex > colours.length - 1) {
+    if (shapeColorIndex > colors.length - 1) {
       shapeColorIndex = 0;
     }
     
-    rVal = colours[shapeColorIndex][0];
-    gVal = colours[shapeColorIndex][1];
-    bVal = colours[shapeColorIndex][2];
+    rVal = colors[shapeColorIndex][0];
+    gVal = colors[shapeColorIndex][1];
+    bVal = colors[shapeColorIndex][2];
     
     color newColor = color(rVal, gVal, bVal);
     
     return newColor;
 
   }
+  
+  
+//  public color getCanvasColor() {
+//    
+//  }
   
   
   public color switchCanvasColor() {

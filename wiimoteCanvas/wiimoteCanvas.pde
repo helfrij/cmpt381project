@@ -1,3 +1,4 @@
+import de.voidplus.dollar.*;
 
 private float cursorRadius;
 private int cursorX, cursorY;
@@ -5,6 +6,7 @@ private color cursorColor;
 
 private int canvasH, canvasW;
 private color canvasColor;
+private boolean crazyOn;
 
 private WiiRemoteJ deviceFinder;
 private WiiRemote remote;
@@ -45,6 +47,10 @@ void setup() {
   model = new CanvasModel(canvasW, canvasH);
   
   canvasColor = color(220);
+    
+  // set up the shape recognizer.
+  OneDollar newRecognizer = new OneDollar(this);
+  model.initializeRecognizer(newRecognizer);
 
 }
 
@@ -59,7 +65,14 @@ void draw() {
   
   // set the canvas background to grey.
 //  background(220);
+
+  if (crazyOn) {
+    canvasColor = model.switchCanvasColor();
+  }
+  
   background(canvasColor);
+  
+  model.checkRecognizer();
   
   // draw shapes and selection box, if valid.
   model.drawShapes();
@@ -101,6 +114,7 @@ void mouseClicked() {
 
 
 void mousePressed() {
+//  recognizer.start(100);
   model.clickCheck(mouseX, mouseY);
 }
 
@@ -179,6 +193,9 @@ void keyPressed() {
     
   } else if ('q' == key) {
     canvasColor = model.switchCanvasColor();
+    
+  } else if ('w' == key) {
+    crazyOn = !crazyOn;
   }
   
 }
