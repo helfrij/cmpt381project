@@ -62,9 +62,9 @@ public class CanvasSelectionModel {
   }
   
   
-  public void setSelectionLineColor(color newColor) {
+  public void setSelectionColor(color newColor) {
     for (AbstractShape shape : selectedShapes) {
-      shape.setLineColor(newColor);
+      shape.setShapeColor(newColor);
     }
   }
   
@@ -160,6 +160,11 @@ public class CanvasSelectionModel {
   
   public void clickCheck(float xPos, float yPos) {
     
+  }
+  
+  
+  public void removeShape(AbstractShape shape) {
+    selectedShapes.remove(shape);
   }
   
 }

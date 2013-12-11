@@ -1,5 +1,8 @@
 public abstract class AbstractLineShape extends AbstractShape {
   
-  public abstract void addPoint(float newX, float newY);
-  
+  color lineColor;
+
+  public void setShapeColor(color newColor) {
+    lineColor = newColor;
+  }  
 }

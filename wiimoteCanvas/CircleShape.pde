@@ -6,17 +6,40 @@ public class CircleShape extends AbstractPolygonShape {
     x = newX;
     y = newY;
     radius = newRadius;
+    isSelected = false;
   } 
-  
-  public void addPoint(float newX, float newY) {
-    // intentionally empty.
-  }
  
   public void drawShape() {
-    fill(0);
-    stroke(0);
-    strokeWeight(1);
-    ellipse(x, y, radius, radius); 
+    int weight;
+    color strokeColor;
+      
+        if (isSelected || isHoverSelected) {
+//          pushMatrix();
+//          translate(getShapeCenterX(), getShapeCenterY());
+//          rotate(getRotationAngle());
+//          scale(getScale());
+//          fill(fillColor);
+//          stroke(255);
+//          strokeWeight(lineWidth + 10);
+//          ellipse(-getShapeCenterX(), -getShapeCenterY(), radius, radius);
+//          popMatrix();
+          weight = lineWidth + 10;
+          strokeColor = color(255);
+        } else {
+          weight = lineWidth;
+          strokeColor = color(fillColor);
+        }
+
+        pushMatrix();
+        translate(getShapeCenterX(), getShapeCenterY());
+        rotate(getRotationAngle());
+        scale(getScale());
+        fill(fillColor);
+        stroke(strokeColor);
+        strokeWeight(weight);
+        ellipse(-getShapeCenterX(), -getShapeCenterY(), radius, radius);
+        popMatrix();
+
   }
  
   public float getMinX() {

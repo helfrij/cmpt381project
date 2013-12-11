@@ -1,9 +1,8 @@
 abstract class AbstractShape {
   
-  int lineWidth;
+  int lineWidth = 2;
   int lineWidthMin = 1;
   int lineWidthMax = 5;
-  color lineColor;
   boolean isSelected;
   boolean isHoverSelected;
   boolean isDrawn;
@@ -24,6 +23,7 @@ abstract class AbstractShape {
   public abstract float getShapeCenterY();
   public abstract void translateX(float dx);
   public abstract void translateY(float dy);
+  public abstract void setShapeColor(color newColor);
   
   
   public boolean isSelected() {
@@ -47,11 +47,6 @@ abstract class AbstractShape {
   
   public void setLineWidth(int newWidth) {
     lineWidth = newWidth; 
-  }
-  
-  
-  public void setLineColor(color newColor) {
-    lineColor = newColor; 
   }
   
   

@@ -7,7 +7,6 @@ public class CanvasModel {
   ColorToolbar colorToolbar;
 
   private ArrayList<AbstractShape> canvasContents;  
-//  private ArrayList<AbstractShape> selectedShapes;
   private AbstractShape drawingShape;
   
   private int canvasWidth, canvasHeight;
@@ -39,7 +38,6 @@ public class CanvasModel {
     addToolbar(colorToolbar);
     
     canvasContents = new ArrayList<AbstractShape>();
-//    selectedShapes = new ArrayList<AbstractShape>();
     drawingShape = null;
     
     selectionModel = new CanvasSelectionModel();
@@ -50,7 +48,6 @@ public class CanvasModel {
     shiftPressed = false;
     selectedPressed = true;
     
-//    lassoSelection = null;
     crazyOn = false;    
     mouseDownX = 0.0;
     mouseDownY = 0.0;
@@ -147,7 +144,7 @@ public class CanvasModel {
   
   public void addDrawingToCanvas() {
     addShapeToCanvas(drawingShape);
-    drawingShape = null;
+    clearDrawingShape();
   }
   
   
@@ -320,16 +317,11 @@ public class CanvasModel {
     }
     
     // if we've been dragging the cursor to form a selection box, the box is now complete. All interior shapes should now be selected.
-//    if (lassoSelection != null) {
       for (AbstractShape shape : canvasContents) {
         if (selectionModel.boxContains(shape)) {
           selectionModel.addShapeToSelection(shape);
         }
-//        if (selectionModel.boxContainsX(shape.getShapeCenterX()) && selectionModel.boxContainsY(shape.getShapeCenterY())) {
-//          selectionModel.addShapeToSelection(shape);
-//        }
       }
-//    }
     
     selectionModel.hideSelectionBox();
     
@@ -357,13 +349,10 @@ public class CanvasModel {
   }
   
   
-  public void switchLineColor() {
+  public void switchShapeColor() {
     color newColor = colorToolbar.switchLineColor();
-    selectionModel.setSelectionLineColor(newColor);
+    selectionModel.setSelectionColor(newColor);
     
-//    for (AbstractShape shape : selectedShapes) {
-//      shape.setLineColor(newColor);
-//    }
   }
   
   
@@ -375,10 +364,7 @@ public class CanvasModel {
     }
     
     selectionModel.setSelectionLineWidth(lineWidth);
-    
-//    for (AbstractShape shape : selectedShapes) {
-//      shape.setLineWidth(lineWidth);
-//    }
+  
   }
   
   
@@ -398,24 +384,35 @@ public class CanvasModel {
   }
   
   
-//  public color getCanvasColor() {
-//    return colorToolbar.getCanvasColor();
-//  }
-  
-  
   public color switchCanvasColor() {
     return colorToolbar.switchCanvasColor();
   }
   
   public void setCrazyOn(boolean isOn) {
     crazyOn = isOn;
-//    colorToolbar.setCrazyOn(true);
   }
   
   
-//  public void checkRecognizer() {
-////    recognizer.check();
-//  }
+  public void clearDrawingShape() {
+    drawingShape = null;
+  }
+  
+  
+  public void drawingRecognized(AbstractShape newPolygon) {
+    addShapeToCanvas(newPolygon);
+    clearDrawingShape();
+  }
+  
+  
+  public void gestureDelete(float xPos, float yPos) {
+    for (AbstractShape shape : canvasContents) {
+      if (shape.checkHit(xPos, yPos)) {
+        canvasContents.remove(shape);
+        selectionModel.removeShape(shape);
+        return;
+      }
+    }
+  }
 
 }
   
