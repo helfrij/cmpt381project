@@ -5,11 +5,11 @@ abstract class AbstractShape {
   int lineWidthMax = 5;
   boolean isSelected;
   boolean isHoverSelected;
-  boolean isDrawn;
-  float scale;
+  boolean isDrawn = true;
+  float scale = 1.0;
   float scaleMax = 3.0;
   float scaleMin = 0.1;
-  float rotationAngle;
+  float rotationAngle = 0.0;
   int clickBuffer = 15;
   
   public abstract void addPoint(float xPos, float yPos);

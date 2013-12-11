@@ -7,27 +7,21 @@ public class CircleShape extends AbstractPolygonShape {
     y = newY;
     radius = newRadius;
     isSelected = false;
+    isDrawn = true;
   } 
  
   public void drawShape() {
-    int weight;
-    color strokeColor;
+      int weight;
+      color strokeColor;
       
         if (isSelected || isHoverSelected) {
-//          pushMatrix();
-//          translate(getShapeCenterX(), getShapeCenterY());
-//          rotate(getRotationAngle());
-//          scale(getScale());
-//          fill(fillColor);
-//          stroke(255);
-//          strokeWeight(lineWidth + 10);
-//          ellipse(-getShapeCenterX(), -getShapeCenterY(), radius, radius);
-//          popMatrix();
-          weight = lineWidth + 10;
+          weight = 5;
           strokeColor = color(255);
+          
         } else {
-          weight = lineWidth;
-          strokeColor = color(fillColor);
+          
+          weight = 0;
+          strokeColor = color(0);
         }
 
         pushMatrix();
@@ -35,9 +29,16 @@ public class CircleShape extends AbstractPolygonShape {
         rotate(getRotationAngle());
         scale(getScale());
         fill(fillColor);
-        stroke(strokeColor);
-        strokeWeight(weight);
-        ellipse(-getShapeCenterX(), -getShapeCenterY(), radius, radius);
+        
+        if (weight == 0 || strokeColor == color(0)) {
+          noStroke();
+        } else {
+          stroke(strokeColor);
+          strokeWeight(weight);
+        }
+        
+//        ellipse(-getShapeCenterX(), -getShapeCenterY(), radius, radius);
+        ellipse(0, 0, radius, radius);
         popMatrix();
 
   }
