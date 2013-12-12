@@ -7,17 +7,41 @@ public class RectangleShape extends AbstractPolygonShape {
     y = newY;
     w = newWidth;
     h = newHeight;
+    
+    isSelected = false;
+    isHoverSelected = false;
+    isDrawn = true;
   } 
-  
-//  public void addPoint(float newX, float newY) {
-//    // intentionally empty.
-//  }
  
   public void drawShape() {
-    fill(0);
-    stroke(0);
-    strokeWeight(1);
-    rect(x, y, w, h); 
+    int weight;
+    color strokeColor;
+    
+    if (isSelected || isHoverSelected) {
+      weight = 5;
+      strokeColor = color(255);
+    } else {
+      weight = 0;
+      strokeColor = color(0);
+    }
+    
+    pushMatrix();
+    translate(getShapeCenterX(), getShapeCenterY());
+    rotate(getRotationAngle());
+    scale(getScale());
+    fill(fillColor);
+    
+    if (weight == 0 || strokeColor == color(0)) {
+      noStroke();
+    } else {
+      strokeWeight(weight);
+      stroke(strokeColor);
+    }
+    
+//    rect(x, y, w, h); 
+    rect(-w/2, -h/2, w, h);
+    popMatrix();
+    
   }
  
   public float getMinX() {
