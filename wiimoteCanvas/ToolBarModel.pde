@@ -1,27 +1,7 @@
 public class ToolBarModel extends AbstractToolbarModel {
-//  private float canvasHeight, canvasWidth;
-//  
-//  private float toolbarX, toolbarY;
-//  private float toolbarW, toolbarH;
-//  private boolean toolbarSelected;
-//  private boolean toolbarMoving;
-//  private float xOffset, yOffset;
-//  private color toolbarColor;
-//  
-//  private int selectedWeight = 4;
-//  private int normalWeight = 2;
-//  private int hoverWeight = 4;
-//  private int toolbarWeight;
-//  
-//  private float iconX, iconY, iconSize;
-//  private float iconCushion;
-//  
-//  private int toolCount = 0;
-//  
+
   public ArrayList<AbstractTool> tools;
   public AbstractTool selectedTool;
-//  
-//  private float initX, initY;
   
   
   public ToolBarModel(float canvasW, float canvasH) {
@@ -226,5 +206,5 @@ public class ToolBarModel extends AbstractToolbarModel {
     xOffset = 0.0;
     yOffset = 0.0;
   }
-
+  
 }

@@ -11,11 +11,13 @@ private boolean crazyOn;
 
 private WiiRemoteJ deviceFinder;
 private WiiRemote remote;
-private WiimoteListener deviceListener;
-
-//private WiimoteWiigee wiigee;
+//private WiimoteListener deviceListener;
 
 private CanvasModel model;
+
+private OneDollar recognizer;
+private boolean recognized;
+private boolean checkConvert;
 
 private AbstractShape drawingShape;
 
@@ -63,8 +65,7 @@ void setup() {
   
   // set up wiimote listener
 //  deviceListener = new WiimoteListener();
-//  remote.addWiiRemoteListener(deviceListener);
-//  
+//  remote.addWiiRemoteListener(deviceListener); 
   
   // set up the model, stores the shapes drawn on the canvas and toolbars.
   model = new CanvasModel(canvasW, canvasH);
@@ -72,8 +73,14 @@ void setup() {
   canvasColor = color(220);
     
   // set up the shape recognizer.
-  //OneDollar newRecognizer = new OneDollar(this);
-  //model.initializeRecognizer(newRecognizer);
+
+recognizer = new OneDollar(this);
+recognizer.setVerbose(true);
+addGestures();
+
+recognizer.bind("circle", "detected");
+recognizer.bind("rectangle", "detected");
+recognizer.bind("delete", "detected");
 
 }
 
