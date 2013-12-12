@@ -28,7 +28,7 @@ public class WiimoteListener implements WiiRemoteListener {
      if(Double.isNaN(rotation)) {
        if(abs(x-.5)>abs(y+1.1) && abs(x-.5)>abs(z)) {
          //X Gesture : change Line colour
-         model.switchLineColor();
+         model.switchShapeColor();
        }
        else if(abs(y+1.1-.5)>abs(x) && abs(y+1.1-.5)>abs(z)) {
          //Y Gesture : change line width
