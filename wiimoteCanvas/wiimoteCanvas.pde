@@ -1,4 +1,5 @@
 import de.voidplus.dollar.*;
+//import Wiigee/
 
 private float cursorRadius;
 private int cursorX, cursorY;
@@ -12,6 +13,8 @@ private WiiRemoteJ deviceFinder;
 private WiiRemote remote;
 private WiimoteListener deviceListener;
 
+//private WiimoteWiigee wiigee;
+
 private CanvasModel model;
 
 private AbstractShape drawingShape;
@@ -19,6 +22,9 @@ private AbstractShape drawingShape;
 //////////////////////////////////////////////////////////////
 
 void setup() {
+  
+  System.setProperty("bluecove.jsr82.psm_minimum_off", "true");
+  
   cursorRadius = 5.0;
   drawingShape = null;
   
@@ -37,11 +43,27 @@ void setup() {
   noCursor();
   
   // create instance of wiiremote
-//  deviceFinder = new WiiRemoteJ();
-// remote = new WiiRemote();
+  deviceFinder = new WiiRemoteJ();
+
+  // Find and connect wiimote  
+  try {
+    remote = deviceFinder.findRemote();
+    if(null != remote) {
+      println("Remote connected!");
+      remote.vibrateFor(1000);
+    }
+  } catch(InterruptedException ie) {
+      println("Interrupted Exception caught!");
+  } catch(IOException ioe) {
+      println("IOException caught!");
+  }
+  
+
   
   // set up wiimote listener
   deviceListener = new WiimoteListener();
+  remote.addWiiRemoteListener(deviceListener);
+  
   
   // set up the model, stores the shapes drawn on the canvas and toolbars.
   model = new CanvasModel(canvasW, canvasH);
@@ -49,8 +71,8 @@ void setup() {
   canvasColor = color(220);
     
   // set up the shape recognizer.
-  OneDollar newRecognizer = new OneDollar(this);
-  model.initializeRecognizer(newRecognizer);
+  //OneDollar newRecognizer = new OneDollar(this);
+  //model.initializeRecognizer(newRecognizer);
 
 }
 
@@ -188,7 +210,7 @@ void keyPressed() {
   } else if ('t' == key) {
     model.rotateSelection(radians(30));
     
-  } else if ('y' == key) {
+  } else if ('y' == key) {s
     model.rotateSelection(radians(-30));
     
   } else if ('q' == key) {
