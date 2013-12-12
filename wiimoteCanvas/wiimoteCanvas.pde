@@ -46,24 +46,25 @@ void setup() {
   deviceFinder = new WiiRemoteJ();
 
   // Find and connect wiimote  
-  try {
-    remote = deviceFinder.findRemote();
-    if(null != remote) {
-      println("Remote connected!");
-      remote.vibrateFor(1000);
-    }
-  } catch(InterruptedException ie) {
-      println("Interrupted Exception caught!");
-  } catch(IOException ioe) {
-      println("IOException caught!");
-  }
+  
+//  try {
+//    remote = deviceFinder.findRemote();
+//    if(null != remote) {
+//      println("Remote connected!");
+//      remote.vibrateFor(1000);
+//    }
+//  } catch(InterruptedException ie) {
+//      println("Interrupted Exception caught!");
+//  } catch(IOException ioe) {
+//      println("IOException caught!");
+//  }
   
 
   
   // set up wiimote listener
-  deviceListener = new WiimoteListener();
-  remote.addWiiRemoteListener(deviceListener);
-  
+//  deviceListener = new WiimoteListener();
+//  remote.addWiiRemoteListener(deviceListener);
+//  
   
   // set up the model, stores the shapes drawn on the canvas and toolbars.
   model = new CanvasModel(canvasW, canvasH);
