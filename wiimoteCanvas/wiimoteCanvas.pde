@@ -1,5 +1,4 @@
 import de.voidplus.dollar.*;
-//import Wiigee/
 
 private float cursorRadius;
 private int cursorX, cursorY;
